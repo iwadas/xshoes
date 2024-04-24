@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.button-special-back:hover{
+    transform: scale(1.03);
+    box-shadow: 0 0 5px rgb(158, 157, 157);
+}
+
+.button-special-back{
+    box-shadow: 0 0 2px rgb(158, 157, 157);
+    transition: 0.1s;
+    position: relative;
+    display: flex;
+    height: fit-content;
+    gap: 5px;
+    border-radius: 10px;
+    padding: 10px 40px;
+    color: black;
+    background: rgb(92,80,230);
+    background: linear-gradient(120deg, rgba(92,80,230,1) 0%, rgba(144,77,230,1) 31%, rgba(164,112,221,1) 45%, rgba(168,85,247,1) 56%, rgba(2,0,36,1) 99%);
+}
+.button-special-front{
+    position: absolute;
+    display: grid;
+    place-items: center;
+    height: calc(100% - 6px);
+    width: calc(100% - 6px);
+    border-radius: 7px;
+    left: 3px;
+    top: 3px;
+    background-color: white;
+    margin: 0;
+}
+
+.button-special-text {
+    text-align: center;
+    background: linear-gradient(120deg, rgba(92,80,230,1) 0%, rgba(144,77,230,1) 31%, rgba(164,112,221,1) 45%, rgba(168,85,247,1) 56%, rgba(2,0,36,1) 99%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    font-weight: 800;
+    color: transparent;
+}
+
+.button-special-text-2 {
+    text-align: center;
+    font-weight: 800;
+    color: black;
+}
+
+.button-primary{
+    padding: 5px 10px;
+    background-color: #a855f7;
+    border-radius: 10px;
+    color: white;
+    display: flex;
+    align-items:center;
+    gap: 10px;
+    cursor: pointer;
+    border: solid 2px #a855f7;
+    transition: 0.1s ease-in;
+}
+
+.button-primary:hover{
+    color: #a855f7;
+    background-color: white;
+    transform: scale(1.03);
+    box-shadow: 0 0 3px lightgray;
+}
+
+.font-teko {
+    font-family: "Teko", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+.font-barlow {
+    font-family: "Barlow", sans-serif;
+    font-style: normal;
+}
+
+.font-light {
+    font-weight: 300;
+}
+
+.font-regular {
+    font-weight: 400;
+}
+
+.font-semibold {
+    font-weight: 600;
+}
+
+.font-bold {
+    font-weight: 700;
+}
+
+  
