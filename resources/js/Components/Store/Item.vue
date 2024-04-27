@@ -4,12 +4,13 @@
             <item-image :src="item.images[0].src"/>
         </div>
         <div class="flex flex-col -mt-4">
-            <h2 class="flex justify-between font-semibold text-xl">
-                {{ item.name }}
-            </h2>
-            <div>
-                <categories :categories="item.categories"/>
+            <div class="flex justify-between items-center">
+                <h2 class="flex justify-between font-semibold text-xl">
+                    {{ item.name }}
+                </h2>
+                <colors :colors="item.colors"/>
             </div>
+            <categories :categories="item.categories"/>
             <div class="text-3xl font-bold mt-2">
                 {{ item.price }}$
             </div>
@@ -21,6 +22,7 @@
 
     import ItemImage from '@/Components/Store/ItemImage.vue';
     import Categories from '@/Components/UX/Categories.vue'
+    import Colors from '@/Components/Store/Colors.vue'
 
     const props = defineProps({
         item: Object

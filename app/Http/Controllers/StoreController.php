@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\Size;
+use App\Models\Brand;
+use App\Models\Color;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -13,10 +16,50 @@ class StoreController extends Controller
      */
     public function index(Request $request)
     {
+        $filters = $request->only(['category', 'brands', 'colors', 'sizes']);
+        $selectedCategory = Category::find($filters['category'] ?? null);
+
+        $items = Item::with(['brands', 'colors', 'sizes'])
+            ->with(['categories' =>  fn($query)=>$query->orderBy('categories.id')])
+            ->with('images', fn($query)=>$query->where('main', true))
+            ->categoryFilter($filters['category'] ?? 0);
+    
+        $itemsId = $items->pluck('id');
+
+        $sizes = Size::whereHas('items', fn($query)=>$query->whereIn('items.id', $itemsId))
+            ->withCount(
+                [
+                    'available_items' => fn($query)=>$query->whereIn('items.id', $itemsId)->filter($filters, 'sizes')
+                ])
+            ->orderBy('available_items_count', 'desc')
+            ->get();
+
+        $brands = Brand::whereHas('items', fn($query)=>$query->whereIn('items.id', $itemsId))
+            ->withCount(
+                [
+                    'items' => fn($query)=>$query->whereIn('items.id', $itemsId)->filter($filters, 'brands')
+                ])
+            ->orderBy('items_count', 'desc')
+            ->get();
+
+        $colors = Color::whereHas('items', fn($query)=>$query->whereIn('items.id', $itemsId))
+            ->withCount(
+                [
+                    'items' => fn($query)=>$query->whereIn('items.id', $itemsId)->filter($filters, 'colors')
+                ])
+            ->orderBy('items_count', 'desc')
+            ->get();
+
+        $items = $items->filter($filters)->get();
 
         return inertia('Store/Index', [
-            'subCategories' => $this->getSubCategories($request->categories),
-            'items' => Item::with(['categories' =>  fn($query)=>$query->orderBy('categories.id')])->with('images', fn($query)=>$query->where('main', true))->get()
+            'chosenCategories' => $this->getChosenCategories($selectedCategory), 
+            'subCategories' =>  $this->getSubCategories($selectedCategory),
+            'brands' => $brands,
+            'colors' => $colors,
+            'sizes' => $sizes,
+            'items' => $items,
+            'filters' => $filters
         ]);
     }
 
@@ -68,12 +111,23 @@ class StoreController extends Controller
         //
     }
 
+    private function getChosenCategories(Category $category = null){
+        $result = [];
+        if($category) {
+            do{
+                array_unshift($result, $category);
+            }
+            while($category = $category->parent()->first());
+        }
+        return $result;
+    }
+
     private function getSubCategories(Category $category = null){
         if(!$category){
-            return Category::whereDoesntHave('parent')->get();
+            return Category::whereDoesntHave('parent')->withCount('items')->with('children', fn($query)=>$query->withCount('items')->with('children', fn($query)=>$query->withCount('items')))->get();
         }
-        $childrenCategories = $category->children()->get();
-        if(!$childrenCategories->isEmpty()){
+        $childrenCategories = $category->children()->withCount('items')->with('children', fn($query)=>$query->withCount('items'))->get();
+        if($childrenCategories->isEmpty()){
             return null;
         } else {
             return $childrenCategories;

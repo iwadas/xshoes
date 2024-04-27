@@ -12,24 +12,11 @@
             </p>
         </div>
         <div class="flex flex-col gap-y-2 mx-auto my-8 w-2/3">
-            <div class="border-t flex flex-col gap-y-3 py-3 px-4">
-                <h3 class="font-bold text-xl">
-                    <i class="fa-solid fa-icons text-sm text-purple-500"></i>
-                    Category
-                </h3>
-                <div class="flex items-center">
-                    <!-- <div class="relative flex items-center gap-x-2 p-3 rounded-full cursor-pointer" htmlFor="checkbox">
-                        <input type="checkbox"
-                            class="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border border-blue-gray-200 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-purple-500 checked:bg-purple-500 checked:before:bg-purple-500 hover:before:opacity-10"
-                            id="checkbox" checked />
-                        <span
-                            class="absolute text-white transition-opacity opacity-0 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 peer-checked:opacity-100">
-                            <i class="fa-solid fa-check"></i>
-                        </span>
-                    </div>
-                    <label for="">Siemano</label> -->
-                </div> 
-            </div>
+            <item-categories v-if="subCategories" :sub-categories="subCategories"/>
+            <item-filter-category v-if="filtered.brands.length" :filter-category-count="filtered.brands" filter-category="brands" icon="fa-diamond" header="Brands"/>
+            <item-filter-category v-if="filtered.colors.length" :filter-category-count="filtered.colors" filter-category="colors" icon="fa-palette" header="Colors"/>
+            <item-filter-category v-if="filtered.sizes.filter(el => el.for == 'clothes').length" :filter-category-count="filtered.sizes.filter(el => el.for == 'clothes')" filter-category="sizes" icon="fa-shirt" header="Clothes sizes"/>
+            <item-filter-category v-if="filtered.sizes.filter(el => el.for == 'shoes').length" :filter-category-count="filtered.sizes.filter(el => el.for == 'shoes')" filter-category="sizes" icon="fa-socks" header="Shoe sizes"/>
         </div>
     </div>
 
@@ -45,8 +32,44 @@
 
 <script setup>
 
+    import ItemCategories from '@/Components/Store/ItemCategories.vue'
+    import ItemFilterCategory from '@/Components/Store/ItemFilterCategory.vue'
+    import { computed } from 'vue'
+
     const props = defineProps({
-        subCategories: Array
+        subCategories: Array,
+        brands: Object,
+        colors: Object,
+        sizes: Object,
+        filters: Object,
     })
+
+    
+    const filtered = computed(
+        ()=>{
+            let result = {brands: [], colors: [], sizes: []}
+            let resultKeys = Object.keys(result);
+            resultKeys.forEach(key => {
+                if(!props.filters[key]){
+                    result[key] = props[key];
+                } else {
+                    let applied = [];
+                    let notApplied = [];
+                    props[key].forEach(keyElement => props.filters[key].includes(String(keyElement.id)) ? applied.push(keyElement) : notApplied.push(keyElement))
+                    result[key] = [...applied, ...notApplied];
+                }
+            })
+            return result
+        }
+    )
+
+    // const brandsFiltered = computed(
+    //     ()=>{
+    //         let applied = [];
+    //         let notApplied = [];
+    //         props.brands.forEach(brand => props.filters.brands.includes(String(brand.id)) ? applied.push(brand) : notApplied.push(brand))
+    //         return [...applied, ...notApplied];
+    //     }
+    // )
 
 </script>

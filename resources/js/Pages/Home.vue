@@ -33,20 +33,26 @@
 
     const handleIframeLoaded = () =>{
         setTimeout(
-            ()=>mainIframe.value.style.opacity = 1
+            ()=>{
+                if(mainIframe.value){
+                    mainIframe.value.style.opacity = 1
+                }
+            }
             ,1500
         )
     }
 
     onMounted(
         ()=>{
-            // mainIframe.value.addEventListener('load', handleIframeLoaded);
+            mainIframe.value.addEventListener('load', handleIframeLoaded);
         }
     )
 
     onUnmounted(
         ()=>{
-            // mainIframe.value.removeEventListener('load', handleIframeLoaded);  
+            if(mainIframe.value){
+                mainIframe.value.removeEventListener('load', handleIframeLoaded);
+            }
         }
     )
 

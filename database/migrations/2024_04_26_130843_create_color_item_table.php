@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Item;
+use App\Models\Color;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -12,10 +13,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sizes', function (Blueprint $table) {
+        Schema::create('color_item', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->enum('for', ['shoes', 'clothes']);
+            $table->foreignIdFor(Item::class);
+            $table->foreignIdFor(Color::class);
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sizes');
+        Schema::dropIfExists('color_item');
     }
 };

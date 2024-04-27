@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             NewsSeeder::class,
             CategorySeeder::class,
             BrandSeeder::class,
+            ColorSeeder::class,
+            SizeSeeder::class,
             ItemSeeder::class,
         ]);
         // \App\Models\User::factory(10)->create();
