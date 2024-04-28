@@ -26,6 +26,7 @@ Route::controller(HomeController::class)->group(function(){
 
 Route::prefix('store')->name('store.')->controller(StoreController::class)->group(function(){
     Route::get('', 'index')->name('index');
+    Route::get('/{item}', 'show')->name('show');
 });
 
 Route::controller(AuthController::class)->group(function(){

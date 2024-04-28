@@ -27,7 +27,7 @@
 
 <script setup>
 
-    import Checkbox from '@/Components/Store/Checkbox.vue'
+    import Checkbox from '@/Components/StoreIndex/Checkbox.vue'
     import { ref, computed } from 'vue'
 
     const props = defineProps({

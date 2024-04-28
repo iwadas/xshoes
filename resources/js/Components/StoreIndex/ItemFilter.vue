@@ -32,8 +32,8 @@
 
 <script setup>
 
-    import ItemCategories from '@/Components/Store/ItemCategories.vue'
-    import ItemFilterCategory from '@/Components/Store/ItemFilterCategory.vue'
+    import ItemCategories from '@/Components/StoreIndex/ItemCategories.vue'
+    import ItemFilterCategory from '@/Components/StoreIndex/ItemFilterCategory.vue'
     import { computed } from 'vue'
 
     const props = defineProps({

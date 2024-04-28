@@ -23,8 +23,9 @@
                     :sizes="sizes"
                     :colors="colors"
                 />
-                <div class="grid grid-cols-3 gap-4">
-                    <item v-for="item in items" :item="item" :key="item.id"/>
+                <div class="grid grid-cols-3 gap-4 pb-10">
+                    <item v-for="item in items.data" :item="item" :key="item.id"/>
+                    <pagination :links="items.links" class="col-span-3 mt-4"/>
                 </div>
             </div>
         </div>
@@ -34,17 +35,18 @@
 
 <script setup>
 
-    import Item from "@/Components/Store/Item.vue";
-    import ItemFilter from '@/Components/Store/ItemFilter.vue';
-    import AppliedFilters from '@/Components/Store/AppliedFilters.vue'
-    import { onMounted, watch, computed, reactive, onBeforeMount} from 'vue'
+    import Item from "@/Components/StoreIndex/Item.vue";
+    import ItemFilter from '@/Components/StoreIndex/ItemFilter.vue';
+    import AppliedFilters from '@/Components/StoreIndex/AppliedFilters.vue'
+    import Pagination from '@/Components/UX/Pagination.vue'
+    import { onMounted, watch, computed, onBeforeMount} from 'vue'
     import { useStore } from 'vuex'
     import debounce from 'lodash/debounce'
     import { router } from '@inertiajs/vue3'
 
     const props = defineProps({
         chosenCategories: Array,
-        items: Array,
+        items: Object,
         filters: Object,
         brands: Object,
         colors: Object,

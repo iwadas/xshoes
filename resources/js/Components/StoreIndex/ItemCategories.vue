@@ -10,7 +10,7 @@
 
 <script setup>
 
-    import ItemCategory from '@/Components/Store/ItemCategory.vue'
+    import ItemCategory from '@/Components/StoreIndex/ItemCategory.vue'
 
     const props = defineProps({
         subCategories: Array

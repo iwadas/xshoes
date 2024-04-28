@@ -9,9 +9,13 @@ export default {
     extend: {
       scale:{
           '102': '1.02',
+          '300': '3.00',
       },
       zIndex: {
         '-1': '-1',
+      },
+      backgroundColor: {
+        'transparent-white': 'rgba(255,255,255,0.5)',
       },
     },
   },

@@ -38,7 +38,7 @@ class ItemSeeder extends Seeder
     {
         $menShoesSneakersCategory = Category::find(5);
         $pathMenSneakers = 'men/shoes/sneakers/';
-        $this->appendCategoriesAndImagesSizes($menShoesSneakersCategory, 'Travis Fragment', ["Jordan", "Nike", "Travis Scott"], 1000, $this->getPaths($pathMenSneakers, 'fragment/', 3, '.jpg'), ['blue', 'black', 'white'], 'shoes', 'men', 'super_low');
+        $this->appendCategoriesAndImagesSizes($menShoesSneakersCategory, 'Travis Fragment', ["Jordan", "Nike", "Travis Scott"], 1000, $this->getPaths($pathMenSneakers, 'fragment/', 2, '.jpg'), ['blue', 'black', 'white'], 'shoes', 'men', 'super_low');
         $this->appendCategoriesAndImagesSizes($menShoesSneakersCategory, 'Jordan 4 Red Cement', ["Nike", "Jordan"], 250, $this->getPaths($pathMenSneakers, 'red_cement/', 2), ['white', 'black', 'red'], 'shoes', 'men', 'high');
         $this->appendCategoriesAndImagesSizes($menShoesSneakersCategory, 'Jordan 1 Lost & Found', ["Nike", "Jordan"], 300, $this->getPaths($pathMenSneakers, 'lost_and_found/', 3), ['white', 'black', 'red'], 'shoes', 'men', 'low');
         $this->appendCategoriesAndImagesSizes($menShoesSneakersCategory, 'Jordan 1 University Blue', ["Nike", "Jordan"], 220, $this->getPaths($pathMenSneakers, 'university_blue/', 1, '.png'), ['white', 'black', 'blue'], 'shoes', 'men', 'high');

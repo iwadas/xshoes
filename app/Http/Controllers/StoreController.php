@@ -19,7 +19,7 @@ class StoreController extends Controller
         $filters = $request->only(['category', 'brands', 'colors', 'sizes']);
         $selectedCategory = Category::find($filters['category'] ?? null);
 
-        $items = Item::with(['brands', 'colors', 'sizes'])
+        $items = Item::with(['brands', 'colors', 'available_sizes'])
             ->with(['categories' =>  fn($query)=>$query->orderBy('categories.id')])
             ->with('images', fn($query)=>$query->where('main', true))
             ->categoryFilter($filters['category'] ?? 0);
@@ -31,7 +31,6 @@ class StoreController extends Controller
                 [
                     'available_items' => fn($query)=>$query->whereIn('items.id', $itemsId)->filter($filters, 'sizes')
                 ])
-            ->orderBy('available_items_count', 'desc')
             ->get();
 
         $brands = Brand::whereHas('items', fn($query)=>$query->whereIn('items.id', $itemsId))
@@ -50,7 +49,7 @@ class StoreController extends Controller
             ->orderBy('items_count', 'desc')
             ->get();
 
-        $items = $items->filter($filters)->get();
+        $items = $items->filter($filters)->paginate(12)->withQueryString();
 
         return inertia('Store/Index', [
             'chosenCategories' => $this->getChosenCategories($selectedCategory), 
@@ -82,9 +81,11 @@ class StoreController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Item $item)
     {
-        //
+        return inertia('Store/Show', [
+            'item' => $item->load('images', 'brands', 'sizes', 'colors', 'categories')
+        ]);
     }
 
     /**

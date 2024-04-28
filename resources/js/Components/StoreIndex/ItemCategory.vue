@@ -27,7 +27,7 @@
 
 <script setup>
 
-    import ItemCategory from '@/Components/Store/ItemCategory.vue'
+    import ItemCategory from '@/Components/StoreIndex/ItemCategory.vue'
     import { ref } from 'vue'
     import { Link } from '@inertiajs/vue3'
 
