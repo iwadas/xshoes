@@ -10,14 +10,12 @@
         <most-popular/>
     </div>
 
-    <!-- <popular-items/> -->
     <div class="flex pb-96"></div>
 
 </template>
 
 <script setup>
 
-    import { Link } from '@inertiajs/vue3'
     import { ref, onMounted, onUnmounted } from 'vue'
     import LogoContainer from '@/Components/UI/LogoContainer.vue';
     import Categories from '@/Components/Home/Categories.vue';
@@ -32,14 +30,9 @@
     const mainIframe = ref(null);
 
     const handleIframeLoaded = () =>{
-        setTimeout(
-            ()=>{
-                if(mainIframe.value){
-                    mainIframe.value.style.opacity = 1
-                }
-            }
-            ,1500
-        )
+        if(mainIframe.value){
+            mainIframe.value.style.opacity = 1
+        }
     }
 
     onMounted(

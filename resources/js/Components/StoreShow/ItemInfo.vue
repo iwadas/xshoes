@@ -5,24 +5,14 @@
             <h2 class="font-bold text-4xl">
                 {{ item.name }}
             </h2>
-            <colors :colors="item.colors"/>
+            <colors :colors="item.colors" class="scale-150"/>
         </div>
         <item-categories :categories="item.categories"/>
         <item-brands :brands="item.brands"/>
         <p class="font-bold text-4xl my-6">{{ item.price }}$</p>
-        <item-sizes :sizes="item.sizes"/>
-        <!-- <button class="mx-auto mt-4 text-xl font-bold text-white bg-gradient-to-tr from-black to-purple-500 py-4 px-12 rounded-lg relative overflow-hidden hover:scale-105 duration-100">
-            <div class="w-full h-full absolute top-0 left-0 bg-gradient-to-tr from-purple-500 to-transparent via-transparent via-25%">
-            </div>
-            <div class="w-full h-full absolute top-0 right-0 bg-gradient-to-tl from-purple-900 to-transparent via-transparent via-40% translate-x-1/5">
-            </div>
-            <p class="relative">
-                <i class="fa-solid fa-cart-shopping text-lg mr-2 "></i>
-                Add to cart
-            </p>
-        </button> -->
-        <div class="mx-auto my-4">
-            <button class="button-special-back text-5xl">
+        <item-sizes :sizes="item.sizes" @selected-size="setSelectedSize" :selected-size="selectedSizeRef" :no-size-selected-error="noSizeSelectedError"/>
+        <div class="mx-auto mt-2 mb-12">
+            <button @click="addToCart" class="button-special-back text-5xl hover:shadow-xl">
                 Add to cart
                 <div class="button-special-front text-black">
                     <p class="font-bold text-2xl">
@@ -32,10 +22,8 @@
                 </div>
             </button>
         </div>
-        
         <item-description :description="item.description"/>
     </div>
-
 
 </template>
 
@@ -46,9 +34,33 @@
     import ItemBrands from '@/Components/Store/ItemBrands.vue'
     import ItemSizes from '@/Components/StoreShow/ItemSizes.vue'
     import ItemDescription from '@/Components/StoreShow/ItemDescription.vue'
+    import { ref } from 'vue'
+    import { router } from '@inertiajs/vue3'
 
     const props = defineProps({
-        item: Object
+        item: Object, 
+        selectedSize: Number
     })
+
+    const selectedSizeRef = ref(props.selectedSize);
+    const noSizeSelectedError = ref(false);
+
+    const setSelectedSize = (sizeId) => {
+        if(selectedSizeRef.value == sizeId){
+            selectedSizeRef.value = null
+        } else {
+            selectedSizeRef.value = sizeId;
+            noSizeSelectedError.value = false;
+        }
+    }
+
+    const addToCart = () => {
+        if(selectedSizeRef.value){
+            router.post(route('cart.store', {item_id: props.item.id, size_id: selectedSizeRef.value}))
+        } else {
+            alert('No size selected');
+            noSizeSelectedError.value = true;
+        }
+    }
 
 </script>

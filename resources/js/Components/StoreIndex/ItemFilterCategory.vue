@@ -1,7 +1,7 @@
 <template>
 
     <div class="border-t flex flex-col gap-y-3 py-3 px-4">
-        <h3 class="font-bold text-xl">
+        <h3 class="font-semibold text-xl">
             <i class="fa-solid text-sm text-purple-500 mr-1" :class="icon"></i>
             {{ header }}
         </h3>
@@ -14,7 +14,7 @@
                 :id="Number(filterElement.id)" 
                 :count="filterCategory == 'sizes' ? filterElement.available_items_count : filterElement.items_count"
             />
-            <button @click="toggleShowAll" class="text-purple-500 text-sm font-semibold underline:hover">
+            <button @click="toggleShowAll" v-if="filterCategoryCount.length > 4" class="text-purple-500 text-sm font-semibold underline:hover">
                 show 
                 <span v-if="showAll">less</span>
                 <span v-else>more</span>

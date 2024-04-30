@@ -1,10 +1,10 @@
 <template>
 
     <div class="py-1.5 px-4 flex justify-between">
-        <Link :href="route('home')" class="hover:underline">
+        <button @click="redirectCategory" class="hover:underline">
             <i class="fa-solid mr-1 text-sm" :class="category.icon"></i>
             {{ category.name }}
-        </Link>
+        </button>
         <button v-if="category.children" @click="toggleChildCategories">
             <i class="fa-solid fa-chevron-down duration-100" :class="showChildCategories ? 'rotate-180' : null"></i>
         </button>
@@ -19,13 +19,20 @@
 
     import ChildCategory from '@/Components/MainLayout/ChildCategory.vue'
     import { ref } from 'vue'
-    import { Link } from '@inertiajs/vue3'
+    import { router } from '@inertiajs/vue3'
 
     const props = defineProps({
         category: Object
     })
 
+    const emit = defineEmits(['toggle-show-category']);
+
     const showChildCategories = ref(false);
+
+    const redirectCategory = () => {
+        emit('toggle-show-category');
+        router.get(route('store.index', {category: props.category.id}));
+    }
 
     const toggleChildCategories = () => {
         showChildCategories.value = !showChildCategories.value

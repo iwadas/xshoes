@@ -81,10 +81,12 @@ class StoreController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Item $item)
+    public function show(Request $request, Item $item)
     {
         return inertia('Store/Show', [
-            'item' => $item->load('images', 'brands', 'sizes', 'colors', 'categories')
+            'item' => $item->load('images', 'brands', 'sizes', 'colors')
+                ->load(['categories' =>  fn($query)=>$query->orderBy('categories.id')]),
+            'selectedSize' => (int) $request->selectedSize
         ]);
     }
 
@@ -99,9 +101,8 @@ class StoreController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        //
+    public function update(){
+
     }
 
     /**

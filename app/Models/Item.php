@@ -34,6 +34,10 @@ class Item extends Model
         return $this->belongsToMany(Size::class)->wherePivot('amount', '>', 1);
     }
 
+    public function cart_items(){
+        return $this->hasMany(CartItem::class);
+    }
+
     public function scopeCategoryFilter($query, int $categoryId){
         return $query->when($categoryId ?? false,
             fn($query, $value)=>$query->whereHas('categories', fn($query)=>$query->where('categories.id', $value))
@@ -58,11 +62,6 @@ class Item extends Model
                         return $query->whereHas('available_sizes', fn($query)=>$query->whereIn('sizes.id', $filters['sizes']));
                     }
                 )
-
-
-                // ->when($filters['colors'] && ($except != 'sizes') ?? false,
-                //     fn($query, $value)=>$query->whereHas('colors', fn($query)=>$query->where('colors.id', $value))
-                // )
             ;
     }
 

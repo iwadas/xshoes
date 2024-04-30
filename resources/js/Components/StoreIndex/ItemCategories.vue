@@ -1,6 +1,6 @@
 <template>
     <div class="border-t flex flex-col gap-y-3 py-3 px-4">
-        <h3 class="font-bold text-xl">
+        <h3 class="font-semibold text-xl">
             <i class="fa-solid fa-icons text-sm text-purple-500"></i>
             Category
         </h3>

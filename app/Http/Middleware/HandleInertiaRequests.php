@@ -39,10 +39,15 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             'user' => $request->user() ? $request->user() : null,
             'flash' => [
-                'success' => $request->session('success'),
-                'error' => $request->session('error')
+                'success' => $request->session()->get('success'),
+                'error' => $request->session()->get('error')
             ],
             'categories' => Category::whereDoesntHave('parent')->with('children', fn($query)=>$query->with('children'))->get(),
+            'cart_items' => $request->user()  
+                ? ($request->user()->cart 
+                    ? $request->user()->cart->cart_items()->with('item', fn($query)=>$query->with('images', fn($query)=>$query->where('main', true)))->with('size')->get() 
+                    : null) 
+                : null,
         ]);
     }
 }

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="absolute duration-200 bg-white shadow-lg rounded-lg flex flex-col min-w-64" style="border: solid 3px #a855f7" :class="showChildCategories ? 'top-28' : '-top-96' ">
-            <child-category v-for="childCategory in category.children" :category="childCategory" :key="childCategory.id"/>
+            <child-category v-for="childCategory in category.children" :category="childCategory" :key="childCategory.id" @toggle-show-category="toggleChildCategories"/>
         </div>
         <button
             @click="toggleChildCategories"

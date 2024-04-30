@@ -38,13 +38,13 @@
     background: linear-gradient(120deg, rgba(92,80,230,1) 0%, rgba(144,77,230,1) 31%, rgba(164,112,221,1) 45%, rgba(168,85,247,1) 56%, rgba(2,0,36,1) 99%);
     -webkit-background-clip: text;
     background-clip: text;
-    font-weight: 800;
+    font-weight: 600;
     color: transparent;
 }
 
 .button-special-text-2 {
     text-align: center;
-    font-weight: 800;
+    font-weight: 600;
     color: black;
 }
 
