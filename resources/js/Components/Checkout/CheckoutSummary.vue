@@ -1,6 +1,6 @@
 <template>
 
-    <div class="border-l pl-8">
+    <div class="border-l pl-8 sticky h-fit top-40">
         <h1 class="mb-5 text-3xl font-bold flex items-center justify-center">
             <i class="button-special-text mr-2 fa-solid fa-clipboard-list text-2xl"></i>
             Summary
@@ -23,10 +23,14 @@
                 Pay
                 <div class="button-special-front">
                     <p class="button-special-text text-lg">
-                        Pay
+                        Complete order
                     </p>
                 </div>
             </button>
+            <div v-if="error" class="mt-2 text-red-500 font-bold text-2xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                {{error}}
+            </div>
         </div>
     </div>
 
@@ -34,16 +38,16 @@
 
 <script setup>
 
-    import { ref, computed } from 'vue'
-    import { router } from '@inertiajs/vue3'
+    import { computed } from 'vue'
 
     const props = defineProps({ 
         cartItems: Array,
         promoCode: Object,
-        shipping: Object
+        shipping: Object,
+        error: String
     })
 
-
+    const emit = defineEmits(['checkout'])
 
     const subtotal = computed(()=>{
         let sum = 0;
@@ -77,9 +81,7 @@
     )
 
     const checkout = () => {
-        if(props.cartItems.length){
-            router.get(route('checkout.index'));
-        }
+        emit('checkout');
     }
 
 

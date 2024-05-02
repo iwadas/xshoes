@@ -1,7 +1,11 @@
 <template>
 
 
-    <div>
+    <div class="relative">
+        <div v-if="error" class="absolute top-0 left-1/2 -translate-x-1/2 text-red-500 font-bold text-2xl">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            You need to fill your address!
+        </div>
         <h1 class="font-semibold text-2xl mb-8">
             <i class="fa-solid fa-truck text-xl mr-1 text-purple-500"></i>
             Chose delivery method
@@ -40,7 +44,8 @@
 
     const props = defineProps({
         shippings: Array,
-        selectedShippingId: Number
+        selectedShippingId: Number,
+        error: Boolean
     })
 
     const emit = defineEmits(['shipping-selected'])

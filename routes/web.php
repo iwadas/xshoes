@@ -7,6 +7,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\PromoCodeController;
 
 /*
@@ -58,3 +60,11 @@ Route::controller(CheckoutController::class)->name('checkout.')->prefix('checkou
 });
 
 Route::resource('address', AddressController::class)->middleware('auth')->only(['store', 'update', 'destroy']);
+
+Route::controller(PayPalController::class)->middleware('auth')->group(function(){
+    Route::post('payment/paypal', 'payment')->name('payment.paypal');
+    Route::get('payment_success/paypal', 'success')->name('payment_success.paypal');
+    Route::get('payment_cancel/paypal', 'cancel')->name('payment_cancel.paypal');
+});
+
+Route::resource('order', OrderController::class)->middleware('auth')->only('index');

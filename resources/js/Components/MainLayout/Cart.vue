@@ -62,7 +62,7 @@
     
     const redirectPay = () => {
         hideCart()
-        router.get(route('cart.index'));
+        router.get(route('checkout.index'));
     }
 
 </script>

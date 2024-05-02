@@ -1,7 +1,7 @@
 <template>
 
     <div class="relative">
-        <button @click="updateChosenAddress" class="py-2 px-4 rounded-lg flex flex-col relative border-[3px] w-full" style="box-shadow: 0 0 10px lightgray" :class="isChosen ? 'border-purple-500 bg-white' : 'border-transparent'">
+        <button @click="updateChosenAddress" class="py-2 px-4 rounded-lg flex flex-col relative border-[3px] w-full duration-100" style="box-shadow: 0 0 10px lightgray" :class="isChosen ? 'border-purple-500 bg-white' : 'border-transparent'">
             <div>
                 {{ address.name }} {{ address.surname }}
             </div>

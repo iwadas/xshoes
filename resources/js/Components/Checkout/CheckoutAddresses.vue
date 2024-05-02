@@ -1,6 +1,10 @@
 <template>
 
-    <div>
+    <div class="relative">
+        <div v-if="error" class="absolute top-0 left-1/2 -translate-x-1/2 text-red-500 font-bold text-2xl">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            You need to fill your address!
+        </div>
         <h1 class="font-semibold text-2xl mb-8">
             <i class="fa-solid fa-location-dot text-xl mr-1 text-purple-500"></i>
             Address
@@ -21,12 +25,13 @@
 
     import CheckoutAddressForm from '@/Components/Checkout/CheckoutAddressForm.vue'
     import CheckoutAddress from '@/Components/Checkout/CheckoutAddress.vue'
-    import { ref } from 'vue'
+    import { ref, watch } from 'vue'
     import { router } from '@inertiajs/vue3'
 
     const props = defineProps({
         addresses: Array,
-        chosenAddressId: Number
+        chosenAddressId: Number,
+        error: Boolean
     })
 
     const emit = defineEmits(['address-chosen'])
@@ -42,8 +47,10 @@
     }
 
     const updateChosenAddress = (newChoosenAddressId) => { 
-        emit('address-chosen', props.addresses.filter(address => address.id == newChoosenAddressId)[0].id)
+        // emit('address-chosen', props.addresses.filter(address => address.id == newChoosenAddressId)[0].id)
+        emit('address-chosen', newChoosenAddressId)
     }
+
 
     const editAddress = (address) => {
         selectedAddress.value = address;
@@ -57,5 +64,14 @@
         router.delete(route('address.destroy', {address: addressId}))
     }
 
+    watch(()=>props.addresses, (newVal, oldVal)=>{
+        if(newVal && oldVal){
+            console.log(newVal);
+            console.log(oldVal);
+            if(newVal.length > oldVal.length){
+                emit('address-chosen', newVal[newVal.length-1].id)
+            }
+        }
+    })
 
 </script>

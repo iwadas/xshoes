@@ -2,12 +2,11 @@
 
     <div class="mt-20 px-10 grid grid-cols-3 container mx-auto gap-8">
         <div class="col-span-2 flex flex-col gap-y-8">
-            <checkout-addresses :addresses="addresses" :chosen-address-id="chosenAddressId" @address-chosen="chooseAddress"/>
-            <checkout-shippings :shippings="shippings" :selected-shipping-id="selectedShipping ? selectedShipping.id : null" @shipping-selected="selectShipping"/>
-            <checkout-payments :shippings="shippings" :selected-shipping-id="selectedShipping ? selectedShipping.id : null" @shipping-selected="selectShipping"/>
+            <checkout-addresses :addresses="addresses" :error="errorAddress" :chosen-address-id="chosenAddressId" @address-chosen="chooseAddress"/>
+            <checkout-shippings :shippings="shippings" :error="errorShipping" :selected-shipping-id="selectedShipping ? selectedShipping.id : null" @shipping-selected="selectShipping"/>
+            <checkout-payments :selected-payment="selectedPayment" :error="errorPayment" @select-payment="selectPayment"/>
         </div>
-        <checkout-summary :cart-items="cartItems" :promo-code="promoCode" :shipping="selectedShipping"/>
-      
+        <checkout-summary :cart-items="cartItems" :promo-code="promoCode" @checkout="checkout" :error="checkoutError"/>
     </div>
 </template>
 
@@ -19,6 +18,7 @@
     import CheckoutSummary from '@/Components/Checkout/CheckoutSummary.vue'
     import { computed, ref } from 'vue'
     import { usePage } from '@inertiajs/vue3'
+    import axios from 'axios' 
 
     const page = usePage()
 
@@ -33,14 +33,74 @@
     })
 
     const selectedShipping = ref(null);
-    const chosenAddressId = ref(props.addresses.filter(address => address.is_main)[0].id ?? null);
+    const chosenAddressId = ref(null);
+    const selectedPayment = ref(null);
+    const errorShipping = ref(false);
+    const errorAddress = ref(false);
+    const errorPayment = ref(false);
+    const checkoutError = ref(null);
+
+    if(props.addresses){
+        let chosenAddress = props.addresses.filter(address => address.is_main)[0]
+        if(chosenAddress){
+            chosenAddressId.value = chosenAddress.id
+        }
+    }
 
     const selectShipping = (val) => {
         selectedShipping.value = val;
+        errorShipping.value = false;
     }
 
     const chooseAddress = (val) => {
         chosenAddressId.value = val;
+        errorAddress.value = false;
     }
+
+    const selectPayment = (val) => {
+        selectedPayment.value = val
+    } 
+
+    const checkout = () => {
+        let error = false;
+        if(!cartItems.value.length || cartItems.value.length == 0){
+            return alert('Something went wrong! Refresh page!');
+        }
+        if(!chosenAddressId.value){
+            errorAddress.value = true;
+            error = true;
+        }
+        if(!(selectedShipping.value ? selectedShipping.value.id : false)){
+            errorShipping.value = true;
+            error = true;
+        }
+        if(!(selectedPayment.value)){
+            errorPayment.value = true;
+            error = true;
+        }
+
+        if(error){
+            return
+        }
+
+        if(selectedPayment.value == 'paypal'){
+            axios.post(route('payment.paypal'), {shipping_id: selectedShipping.value.id, address_id: chosenAddressId.value})
+                .then(e=>{
+                    let url = e.data.url
+                    if(url){
+                        window.open(url);
+                    }
+                    console.log(e);
+                })
+                .catch(e=>{
+                    console.error(e);
+                    checkoutError.value = e.response.data.error
+                })
+        }
+
+    }
+
+
+
 
 </script>

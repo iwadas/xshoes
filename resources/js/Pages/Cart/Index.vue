@@ -1,6 +1,6 @@
 <template>
 
-    <div class="mt-20 px-10 grid grid-cols-3 container mx-auto gap-8">
+    <div class="mt-20 px-10 grid grid-cols-3 container mx-auto gap-8 relative">
         <cart-items-list :cart-items="cartItems" class="col-span-2"/>
         <cart-summary :cart-items="cartItems" :promo-code="promoCode"/>
 
