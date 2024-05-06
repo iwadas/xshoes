@@ -4,11 +4,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\StoreController;
-use App\Http\Controllers\AddressController;
-use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\StoreController;
 use App\Http\Controllers\PayPalController;
+use App\Http\Controllers\StripeController;
+use App\Http\Controllers\AddressController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\PromoCodeController;
 
 /*
@@ -61,10 +63,24 @@ Route::controller(CheckoutController::class)->name('checkout.')->prefix('checkou
 
 Route::resource('address', AddressController::class)->middleware('auth')->only(['store', 'update', 'destroy']);
 
-Route::controller(PayPalController::class)->middleware('auth')->group(function(){
-    Route::post('payment/paypal', 'payment')->name('payment.paypal');
-    Route::get('payment_success/paypal', 'success')->name('payment_success.paypal');
-    Route::get('payment_cancel/paypal', 'cancel')->name('payment_cancel.paypal');
+Route::controller(PaymentController::class)->middleware('auth')->prefix('payment')->name('payment.')->group(function(){
+    Route::post('checkout/paypal', 'paypalCheckout')->name('checkout.paypal');
+    Route::post('checkout/stripe', 'stripeCheckout')->name('checkout.stripe');
+    Route::get('success/stripe', 'stripeSuccess')->name('success.stripe');
+    Route::get('success/paypal', 'paypalSuccess')->name('success.paypal');
+    Route::get('cancel/paypal', 'paypalCancel')->name('cancel.paypal');
+    Route::get('cancel/stripe', 'stripeCancel')->name('cancel.stripe');
 });
+// Route::controller(PayPalController::class)->middleware('auth')->group(function(){
+//     Route::post('payment/paypal', 'payment')->name('payment.paypal');
+//     Route::get('payment_success/paypal', 'success')->name('payment_success.paypal');
+//     Route::get('payment_cancel/paypal', 'cancel')->name('payment_cancel.paypal');
+// });
+
+// Route::controller(StripeController::class)->middleware('auth')->group(function(){
+//     Route::post('payment/stripe', 'payment')->name('payment.stripe');
+//     Route::get('payment_success/stripe', 'success')->name('payment_success.stripe');
+//     Route::get('payment_cancel/stripe', 'cancel')->name('payment_cancel.stripe');
+// });
 
 Route::resource('order', OrderController::class)->middleware('auth')->only('index');

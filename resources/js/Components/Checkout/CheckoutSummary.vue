@@ -1,6 +1,6 @@
 <template>
 
-    <div class="border-l pl-8 sticky h-fit top-40">
+    <div class="sticky h-fit top-40">
         <h1 class="mb-5 text-3xl font-bold flex items-center justify-center">
             <i class="button-special-text mr-2 fa-solid fa-clipboard-list text-2xl"></i>
             Summary

@@ -48,6 +48,9 @@ class HandleInertiaRequests extends Middleware
                     ? $request->user()->cart->cart_items()->with('item', fn($query)=>$query->with('images', fn($query)=>$query->where('main', true)))->with('size')->get() 
                     : null) 
                 : null,
+            'uncompleted_orders_count' => $request->user() 
+                ? $request->user()->orders()->whereHas('payment', fn($query)=>$query->where('status', 'in_progress'))->count()
+                : null
         ]);
     }
 }

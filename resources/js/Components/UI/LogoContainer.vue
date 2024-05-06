@@ -25,10 +25,10 @@
 
 <style scope>
     .x-container :nth-child(2n) {
-        left: 200vw;
+        left: 250vw;
     }
     .x-container :nth-child(2n+1) {
-        left: -200vw
+        left: -250vw
     }
 
     @keyframes opacity {

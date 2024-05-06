@@ -14,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
+            $table->enum('by', ['stripe', 'paypal']);
             $table->foreignIdFor(User::class);
             $table->string('key');
             $table->enum('status', ['in_progress', 'completed', 'cancelled'])->default('in_progress');

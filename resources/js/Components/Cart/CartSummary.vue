@@ -1,6 +1,6 @@
 <template>
 
-    <div class="border-l pl-8">
+    <div class="sticky top-40 h-fit">
         <h1 class="mb-5 text-3xl font-bold flex items-center justify-center">
             <i class="button-special-text mr-2 fa-solid fa-clipboard-list text-2xl"></i>
             Summary
@@ -49,6 +49,9 @@
 
     const subtotal = computed(()=>{
         let sum = 0;
+        if(!props.cartItems){
+            return 0;
+        }
         props.cartItems.forEach(cartItem => {
             sum += cartItem.amount * cartItem.item.price;
         })

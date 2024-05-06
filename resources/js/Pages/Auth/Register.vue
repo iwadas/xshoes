@@ -2,7 +2,7 @@
 
 
     <logo-container/>
-    <container :top="true" :fit="true">
+    <container :fit="true">
         <template v-slot:icon>
             <i class="fa-solid fa-right-to-bracket text-3xl"></i>
         </template>

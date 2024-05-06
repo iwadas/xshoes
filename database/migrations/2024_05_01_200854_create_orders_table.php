@@ -19,7 +19,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class);
-            $table->foreignIdFor(Payment::class);
+            $table->foreignIdFor(Payment::class)->nullable();
             $table->foreignIdFor(Cart::class);
             $table->foreignIdFor(Shipping::class);
             $table->foreignIdFor(Address::class);

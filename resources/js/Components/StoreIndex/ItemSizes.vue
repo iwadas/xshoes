@@ -4,7 +4,7 @@
         <Link 
             v-for="size in sizes" 
             :href="route('store.show', {item: itemId, selectedSize: size.id})" 
-            class="bg-black text-white rounded-lg px-3 py-1 font-semibold"
+            class="bg-black text-white rounded-lg px-3 py-1 font-semibold hover:scale-105 duration-100"
         >
             {{ size.name }}
         </Link>

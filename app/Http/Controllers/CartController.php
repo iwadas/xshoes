@@ -36,6 +36,11 @@ class CartController extends Controller
      */
     public function store(Request $request)
     {
+
+        // if($request->user()->payments()->where('status', 'in_progress')->exists()){
+        //     return redirect()->back()->with('error', 'You have uncompleted payments! Fullfill or remove it to add items to cart!');
+        // }
+
         $itemId = $request->item_id;
         $sizeId = $request->size_id;
         
