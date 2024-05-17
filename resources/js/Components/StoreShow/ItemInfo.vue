@@ -1,9 +1,6 @@
 <template>
 
     <div class="flex flex-col gap-y-4">
-        <div v-for="size in item.sizes">
-            {{ size.name }} : {{ size.pivot.amount }}
-        </div>
         <div class="flex justify-between items-center">
             <h2 class="font-bold text-4xl">
                 {{ item.name }}
@@ -59,7 +56,7 @@
 
     const addToCart = () => {
         if(selectedSizeRef.value){
-            router.post(route('cart.store', {item_id: props.item.id, size_id: selectedSizeRef.value}))
+            router.post(route('cart.store', {item_id: props.item.id, size_id: selectedSizeRef.value}), { preserveScroll : true })
         } else {
             alert('No size selected');
             noSizeSelectedError.value = true;

@@ -19,4 +19,5 @@ class CheckoutController extends Controller
             'shippings' => Shipping::all(),
         ]);
     }
+
 }

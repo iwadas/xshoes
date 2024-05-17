@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -12,9 +13,36 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         return inertia("Order/Index", [
-            'orders' => $request->user()->orders()->with('cart', 'shipping', 'address', 'payment')->get()
+            'orders' => $request->user()->orders()
+                ->whereHas('payment', fn($query)=>$query->where('status', 'completed'))
+                ->with('shipping', 'address', 'payment')
+                ->with('cart.cart_items', 
+                    fn($query)=>$query->with('size')->with('item.images',
+                        fn($query)=>$query->where('main', true))
+                )
+                ->orderBy('created_at', 'desc')
+                ->get(),
+            'uncompleted_orders' => $request->user()->orders()
+                ->whereHas('payment', fn($query)=>$query->where('status', 'in_progress'))
+                ->with('shipping', 'address', 'payment')
+                ->with('cart.cart_items', 
+                    fn($query)=>$query->with('size')->with('item.images',
+                        fn($query)=>$query->where('main', true))
+                )
+                ->orderBy('created_at', 'desc')
+                ->get(),
         ]);
     }
+
+
+    public function destroy(Request $request, Order $order){
+        if($request->user()->id === $order->user_id){
+            $request->order->payment->delete();
+            $request->order->delete();
+        }
+        return redirect()->back()->with('success', 'Order was cancelled successfully!');
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -35,9 +63,11 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Order $order)
     {
-        //
+        return inertia("Order/Show", [
+            'order' => $order->load(['shipping', 'address', 'cart', 'payment'])->load(['cart.cart_items' => fn($query)=>$query->with('item.images', 'size')])
+        ]);
     }
 
     /**
@@ -59,8 +89,5 @@ class OrderController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        //
-    }
+
 }

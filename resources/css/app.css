@@ -59,6 +59,7 @@
     cursor: pointer;
     border: solid 2px #a855f7;
     transition: 0.1s ease-in;
+    text-align: center;
 }
 .button-primary-static{
     padding: 5px 10px;

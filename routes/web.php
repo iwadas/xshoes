@@ -64,6 +64,7 @@ Route::controller(CheckoutController::class)->name('checkout.')->prefix('checkou
 Route::resource('address', AddressController::class)->middleware('auth')->only(['store', 'update', 'destroy']);
 
 Route::controller(PaymentController::class)->middleware('auth')->prefix('payment')->name('payment.')->group(function(){
+    Route::post('complete/{order}', 'complete')->name('complete');
     Route::post('checkout/paypal', 'paypalCheckout')->name('checkout.paypal');
     Route::post('checkout/stripe', 'stripeCheckout')->name('checkout.stripe');
     Route::get('success/stripe', 'stripeSuccess')->name('success.stripe');
@@ -83,4 +84,4 @@ Route::controller(PaymentController::class)->middleware('auth')->prefix('payment
 //     Route::get('payment_cancel/stripe', 'cancel')->name('payment_cancel.stripe');
 // });
 
-Route::resource('order', OrderController::class)->middleware('auth')->only('index');
+Route::resource('order', OrderController::class)->middleware('auth')->only(['index', 'destroy', 'show']);

@@ -73,101 +73,22 @@ class PaymentController extends Controller
         };
     }
 
-    public function paypalCompletePayment(Request $request, Order $order){
-        
-        $oldPayment = $order->payment;
+    public function complete(Request $request, Order $order){
 
-        if($oldPayment->status !== "in_progress"){
-            return $this->redirectWithError(route("uncompleted_orders.index"), "Payment in this order is completed!");
+        if($order->payment->status !== 'in_progress'){
+            return redirect()->route('home')->with('error', "Something went wrong! Please refresh the website");
         }
-        
-        $oldPayment->delete();
-
-        $errors = $this->checkoutValidation($request, $order->cart);
-
-        if(isset($errors['error'])){
-            $order->cart->delete();
-            $order->delete();
-            return $this->redirectWithError(route('home'), "Products in your order are no longer available!");
+        if($request->user()->cart()){
+            $request->user()->cart()->delete();
         }
+        $order->cart()->update([
+            'user_id' => $request->user()->id
+        ]);
+        $order->payment->delete();
+        $order->delete();
 
-        $cart = $order->cart;
-        $shipping = Shipping::find($order->shipping_id);
-
-        $price = $this->getCartPrice($cart, $shipping);
-        $response = $this->getPaypalResponse($price);
-        
-        if($responseUrl = $this->getPaypalResponseUrl($response)){
-
-            $newPayment = $this->createPayment($response['id'], $price, 'paypal', $request->user()->id);
-            
-            $order->update([
-                'payment_id' => $newPayment->id,
-            ]);
-
-            $oldPayment->update([
-                'status' => 'cancelled'
-            ]);
-
-            return response()->json(['url' => $responseUrl]);
-
-        } else {
-
-            $order->cart->delete();
-            $order->delete();
-            return $this->redirectWithError(route('checkout.index'), "We couldn't paypal redirect link!");
-        
-        };
-
+        return redirect()->route('checkout.index');
     }
-
-    // public function stripeCompletePayment(Request $request, Order $order){
-        
-    //     $oldPayment = $order->payment;
-
-    //     if($oldPayment->status !== "in_progress"){
-    //         return $this->redirectWithError(route("uncompleted_orders.index"), "Payment in this order is completed!");
-    //     }
-        
-    //     $oldPayment->delete();
-
-    //     $errors = $this->checkoutValidation($request, $order->cart);
-
-    //     if(isset($errors['error'])){
-    //         $order->cart->delete();
-    //         $order->delete();
-    //         return $this->redirectWithError(route('home'), "Products in your order are no longer available!");
-    //     }
-
-    //     $cart = $order->cart;
-    //     $shipping = Shipping::find($order->shipping_id);
-
-    //     $price = $this->getCartPrice($cart, $shipping);
-    //     $response = $this->getPaypalResponse($price);
-        
-    //     if($responseUrl = $this->getPaypalResponseUrl($response)){
-
-    //         $newPayment = $this->createPayment($response['id'], $price, 'paypal', $request->user()->id);
-            
-    //         $order->update([
-    //             'payment_id' => $newPayment->id,
-    //         ]);
-
-    //         $oldPayment->update([
-    //             'status' => 'cancelled'
-    //         ]);
-
-    //         return response()->json(['url' => $responseUrl]);
-
-    //     } else {
-
-    //         $order->cart->delete();
-    //         $order->delete();
-    //         return $this->redirectWithError(route('checkout.index'), "We couldn't paypal redirect link!");
-        
-    //     };
-
-    // }
 
     public function paypalSuccess(Request $request){
         if($response = $this->checkIfPaypalPaymentIsCompleted($request->token)){
@@ -201,7 +122,7 @@ class PaymentController extends Controller
         return $this->deletePayment($request, $request->token);
     }
 
-    public function stipeCancel(Request $request){
+    public function stripeCancel(Request $request){
         $this->attachCartToUser($request);
         $this->deleteUnfinishedOrders($request);
         return $this->deletePayment($request, $request->session_id);
