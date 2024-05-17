@@ -2,6 +2,12 @@
 <template>
     <div>
         <div class="absolute duration-200 right-10 bg-white shadow-lg rounded-lg flex flex-col max-h-[600px]" style="border: solid 3px #a855f7" :class="showDashboard ? 'top-28' : '-top-[1000px]' ">
+            <button v-if="role.length" @click="redirectControlPanel" class="py-1.5 px-12 gap-x-2 flex justify-between items-center">
+                <i class="fa-solid fa-crown"></i>
+                <span class="hover:underline">
+                    Panel
+                </span>           
+             </button>
             <button @click="redirectOrders" class="py-1.5 px-12 gap-x-2 flex justify-between items-center">
                 <i class="fa-solid fa-shopping-bag"></i>
                 <span class="hover:underline">
@@ -23,7 +29,7 @@
                 <div class="button-special-front">
                     <div class="button-special-text-2 relative">
                         <div v-if="uncompletedOrders" class="absolute -top-1 -right-3 text-[10px] h-4 w-4 grid place-items-center rounded-full bg-purple-500 text-white"></div>
-                        <i class="fa-solid fa-shopping-cart text-sm text-purple-500"></i>
+                        <i class="fa-solid fa-user text-sm text-purple-500"></i>
                         {{user.name}}
                     </div>
                 </div>
@@ -40,6 +46,7 @@
 
     const props = defineProps({
         user: Object,
+        role: Array,
         showDashboard: Boolean,
         uncompletedOrders: Number
     })
@@ -56,6 +63,11 @@
     const redirectOrders = () => {
         hideDashboard()
         router.get(route('order.index'));
+    }
+
+    const redirectControlPanel = () => {
+        hideDashboard()
+        router.get(route('control_panel.index'));
     }
 
     const logout = () => {

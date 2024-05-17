@@ -12,6 +12,8 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\PromoCodeController;
+use App\Http\Controllers\ControlPanelController;
+use App\Http\Middleware\IsModerator;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,16 +74,9 @@ Route::controller(PaymentController::class)->middleware('auth')->prefix('payment
     Route::get('cancel/paypal', 'paypalCancel')->name('cancel.paypal');
     Route::get('cancel/stripe', 'stripeCancel')->name('cancel.stripe');
 });
-// Route::controller(PayPalController::class)->middleware('auth')->group(function(){
-//     Route::post('payment/paypal', 'payment')->name('payment.paypal');
-//     Route::get('payment_success/paypal', 'success')->name('payment_success.paypal');
-//     Route::get('payment_cancel/paypal', 'cancel')->name('payment_cancel.paypal');
-// });
-
-// Route::controller(StripeController::class)->middleware('auth')->group(function(){
-//     Route::post('payment/stripe', 'payment')->name('payment.stripe');
-//     Route::get('payment_success/stripe', 'success')->name('payment_success.stripe');
-//     Route::get('payment_cancel/stripe', 'cancel')->name('payment_cancel.stripe');
-// });
 
 Route::resource('order', OrderController::class)->middleware('auth')->only(['index', 'destroy', 'show']);
+
+Route::controller(ControlPanelController::class)->name('control_panel.')->prefix('control_panel')->middleware(['auth', IsModerator::class])->group(function(){
+    Route::get('index', 'index')->name('index');
+});

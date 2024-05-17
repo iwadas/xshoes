@@ -3,7 +3,7 @@
     <header class="flex fixed top-0 w-full bg-white z-50 gap-x-2 py-2 px-10 items-center justify-between shadow-lg font-barlow">
         <Link class="h-20 object-cover" :href="route('home')">
             <img 
-                src="\storage\app\public\default\logo_text.png" 
+                src='/public/images/logo/logo_text.png'
                 class="h-full w-full"
                 alt=""
             >
@@ -12,17 +12,8 @@
             <category v-for="category in categories" :category="category" :show-category-id="showCategoryId" :key="category.id" @toggle-show-category="changeShowCategory"/>
         </div>
         <div class="flex gap-x-2">
-            <!-- <Link :href="route('help')" class="button-special-back">
-                Help
-                <div class="button-special-front">
-                    <div class="button-special-text-2">
-                        <i class="fa-solid fa-handshake text-sm text-purple-500"></i>
-                        Help
-                    </div>
-                </div>
-            </Link> -->
             <cart v-if="user" :cart-items="cartItems" :show-cart="showCartRef" @toggle-show-cart="toggleShowCart" @hide-cart="hideCart"/>
-            <dashboard v-if="user" :show-dashboard="showDashboardRef" :uncompleted-orders="uncompletedOrdersCount" :user="user" @toggle-show-dashboard="toggleShowDashboard" @hide-dashboard="hideDashboard"/>
+            <dashboard v-if="user" :show-dashboard="showDashboardRef" :uncompleted-orders="uncompletedOrdersCount" :user="user" :role="role" @toggle-show-dashboard="toggleShowDashboard" @hide-dashboard="hideDashboard"/>
             <Link v-else :href="route('login')" class="button-special-back">
                 Login
                 <div class="button-special-front">
@@ -70,7 +61,8 @@
     import { ref, computed, watch } from 'vue'
 
     const page = usePage()
-    const user = computed(() => page.props.user)
+    const user = computed(() => page.props.user);
+    const role = computed(() => page.props.role);
     const categories = computed(() => page.props.categories)
     const cartItems = computed(() => page.props.cart_items)
     const uncompletedOrdersCount = computed(() => page.props.uncompleted_orders_count);

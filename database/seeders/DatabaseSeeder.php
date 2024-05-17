@@ -22,14 +22,12 @@ class DatabaseSeeder extends Seeder
             ItemSeeder::class,
             PromoCodeSeeder::class,
             ShippingSeeder::class,
+            RoleSeeder::class,
+            UserSeeder::class
         ]);
 
 
         // \App\Models\User::factory(10)->create();
-        User::factory()->create([
-            'name' => '123123',
-            'email' => '123123@gmail.com',
-            'password' => '123123'
-        ]);
+
     }
 }

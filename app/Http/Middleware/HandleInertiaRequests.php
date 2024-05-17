@@ -38,6 +38,7 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             'user' => $request->user() ? $request->user() : null,
+            'role' => $request->user() ? $request->user()->roles()->get() : null,
             'flash' => [
                 'success' => $request->session()->get('success'),
                 'error' => $request->session()->get('error')
@@ -50,7 +51,7 @@ class HandleInertiaRequests extends Middleware
                 : null,
             'uncompleted_orders_count' => $request->user() 
                 ? $request->user()->orders()->whereHas('payment', fn($query)=>$query->where('status', 'in_progress'))->count()
-                : null
+                : null,
         ]);
     }
 }

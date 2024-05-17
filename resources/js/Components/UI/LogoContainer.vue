@@ -1,7 +1,7 @@
 <template>
     <div class="absolute top-1/2 left-1/2 w-1/2 -translate-x-1/2 -translate-y-1/2 x-container overflow-hidden" style="height: 750px; width: 750px" ref="xContainer">
         <img 
-            src="\storage\app\public\default\logo.png" 
+        src='/public/images/logo/logo.png'
             class="h-full w-full object-cover"
         >
         <img 
@@ -9,7 +9,7 @@
             v-for="n in 10"
             :key="n"
             :id="`x${n}`"
-            src='/storage/app/public/default/logo_white.png'
+            src='/public/images/logo/logo_white.png'
             class="absolute duration-500"
         >
         <img 
@@ -17,7 +17,7 @@
             v-for="n in 10"
             :key="n"
             :id="`x${n}`"
-            src='/storage/app/public/default/logo_black.png'
+            src='/public/images/logo/logo_black.png'
             class="absolute duration-500"
         >
     </div>
