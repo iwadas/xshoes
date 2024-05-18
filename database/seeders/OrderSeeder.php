@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Cart;
 use App\Models\Item;
 use App\Models\User;
+use App\Models\Order;
 use App\Models\Address;
 use App\Models\Payment;
 use App\Models\CartItem;
@@ -27,7 +28,7 @@ class OrderSeeder extends Seeder
             //give user address
             $address = Address::factory()->create(['user_id' => $user->id]);
             
-            for($j=0; $j<rand(1,5); $j++){
+            for($j=0; $j<rand(1,20); $j++){
 
                 //prepare cart
                 $cart = Cart::create();
@@ -55,7 +56,9 @@ class OrderSeeder extends Seeder
                 //create tracking
                 $tracking = Tracking::factory()->create();
 
-                $user->orders()->create([
+                
+                Order::factory()->create([
+                    'user_id' => $user->id,
                     'payment_id' => $payment->id,
                     'cart_id' => $cart->id,
                     'address_id' => $address->id,

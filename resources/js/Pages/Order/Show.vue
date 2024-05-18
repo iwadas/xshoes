@@ -15,7 +15,7 @@
                     </div>
                 </div>
                 <div class="flex flex-col gap-y-2 px-8 h-fit rounded-lg" style="box-shadow: 0 0 10px lightgray">
-                    <cart-item v-for="cartItem, index in order.cart.cart_items" :cart-item="cartItem" :class="index == order.cart.cart_items.length - 1 ? null : 'border-b'"/>
+                    <order-item v-for="cartItem, index in order.cart.cart_items" :cart-item="cartItem" :class="index == order.cart.cart_items.length - 1 ? null : 'border-b'"/>
                 </div>
             </div>
             <div class="flex flex-col rounded-lg py-2 px-10 h-fit gap-y-4"  style="box-shadow: 0 0 10px lightgray">
@@ -60,7 +60,7 @@
 
 <script setup>
 
-    import CartItem from "@/Components/Order/CartItem.vue"
+    import OrderItem from "@/Components/Order/OrderItem.vue"
     import { computed } from 'vue'
     import { Link } from '@inertiajs/vue3'
 

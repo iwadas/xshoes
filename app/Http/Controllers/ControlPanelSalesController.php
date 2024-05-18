@@ -10,32 +10,44 @@ class ControlPanelSalesController extends Controller
 {
     public function index(Request $request){
 
-        $time = $this->getCarbonTime($request->time);
+        $time = $request->time ? $request->time : 'day';
+        $date = $this->getCarbonTime($time);
         $orders = Order::whereHas('payment', fn($query)=>$query->where('status', 'completed'))
-            ->when($time,
+            ->when($date,
                 fn($query, $value)=>$query->where('created_at', '>=', $value)
             )
-            ->with(['cart.cart_items.item', 'payment'])
+            ->with('payment')
+            ->with(
+                'cart.cart_items', fn($query)=>$query->with(['item.images', 'size'])
+            )
+            ->orderBy('created_at', 'desc')
             ->get();
 
         // calculate total income, by summing all order->payments->price
-        $income = $orders->sum(fn($order) => $order->payment->price);
-
-        $products = [];
+        $items = [];
         foreach($orders as $order){
             foreach($order->cart->cart_items as $cartItem){
-                if(isset($products[$cartItem->item_id])){
-                    $products[$cartItem->item_id]['sold'] += $cartItem->amount;
+                if(isset($items[$cartItem->item_id])){
+                    $items[$cartItem->item_id]['sold'] += $cartItem->amount;
+                    if(isset($items[$cartItem->item_id]['sizes'][$cartItem->size->name])){
+                        $items[$cartItem->item_id]['sizes'][$cartItem->size->name] += $cartItem->amount;
+                    } else {
+                        $items[$cartItem->item_id]['sizes'][$cartItem->size->name] = $cartItem->amount;
+                    }
                 } else {
-                    $products[$cartItem->item_id] = ['item' => $cartItem->item, 'sold' => $cartItem->amount];
+                    $items[$cartItem->item_id] = ['item' => $cartItem->item, 'sold' => $cartItem->amount, 'sizes' => [$cartItem->size->name => $cartItem->amount]];
                 }
             }
         }
 
+        usort($items, function($a, $b) {
+            return $b['sold'] <=> $a['sold'];
+        });
+
         return inertia('ControlPanelSales/Index', [
             'orders' => $orders,
-            'income' => $income,
-            'products' => $products
+            'items' => $items,
+            'time' => $time
         ]);
     }
 
@@ -43,16 +55,10 @@ class ControlPanelSalesController extends Controller
         switch ($time) {
             case 'month':
                 return Carbon::now()->startOfMonth();
-                break;
             case 'year':
-                return  Carbon::now()->startOfYear();
-                break;
-            case 'all':
-                return null;
-                break;
+                return Carbon::now()->startOfYear();
             default:
                 return Carbon::today();
-                break;
         }
     }
 }

@@ -6,7 +6,10 @@
                 <img :src="cartItem.item.images[0].src" alt="" class="w-full h-full object-cover">
             </div>
             <div class="font-semibold flex flex-col gap-x-2 text">
-                <Link class="hover:underline text-xl" :href="route('store.show', {item: cartItem.item.id})">{{ cartItem.item.name }}</Link>
+                <p>
+                    {{ cartItem.amount }} x
+                    <Link class="hover:underline text-xl" :href="route('store.show', {item: cartItem.item.id})">{{ cartItem.item.name }}</Link>
+                </p>
                 <p>
                     <span class="font-normal">size: </span> {{ cartItem.size.name }}
                 </p>
