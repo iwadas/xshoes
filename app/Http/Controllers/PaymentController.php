@@ -10,6 +10,7 @@ use App\Models\Address;
 use App\Models\Payment;
 use App\Models\ItemSize;
 use App\Models\Shipping;
+use App\Models\Tracking;
 use Stripe\StripeClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -96,7 +97,7 @@ class PaymentController extends Controller
             $this->updatePaymentAsCompleted($request->token, $request->user(), $response['payment_source']);
             $this->deleteUnfinishedOrders($request);
 
-            return redirect()->route('store.index')->with("success", "Payment completed successfully!");
+            return redirect()->route('order.index')->with("success", "Payment completed successfully!");
 
         } else {
             return redirect()->route('payment.cancel.paypal', ['token' => $request->token]);
@@ -146,9 +147,14 @@ class PaymentController extends Controller
     }
 
     private function updatePaymentAsCompleted($key, User $user, $paypmentSource){
-        $user->payments()->where('key', $key)->update([
+        $payment = $user->payments()->where('key', $key)->first();
+        $payment->update([
             'status' => 'completed',
             'payment_source' => json_encode($paypmentSource),
+        ]);
+        $tracking = Tracking::create();
+        $payment->order->update([
+            'tracking_id' => $tracking->id
         ]);
     }
 
@@ -297,6 +303,7 @@ class PaymentController extends Controller
     }
 
     private function createOrder(Payment $payment, Request $request){
+
         $request->user()->orders()->create([
             'payment_id' => $payment->id,
             'cart_id' => $request->user()->cart->id,

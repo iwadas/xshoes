@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('trackings', function (Blueprint $table) {
             $table->id();
+            $table->enum('status', ['received', 'shipped', 'completed'])->default('received');
+            $table->string('url')->nullable();
             $table->timestamps();
         });
     }

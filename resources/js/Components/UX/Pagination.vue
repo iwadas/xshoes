@@ -1,6 +1,6 @@
 <template>
 
-    <ul class="flex gap-x-2 mx-auto" v-if="links.length > 3">
+    <ul class="flex gap-x-2 mx-auto" v-if="links ? links.length > 3 : false">
         <li v-for="link in links" class="hover:scale-105 duration-100 shadow-sm hover:shadow-lg">
             <Link 
                 v-if="link.url" 

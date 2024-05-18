@@ -5,6 +5,7 @@ use App\Models\User;
 use App\Models\Address;
 use App\Models\Payment;
 use App\Models\Shipping;
+use App\Models\Tracking;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -23,6 +24,7 @@ return new class extends Migration
             $table->foreignIdFor(Cart::class);
             $table->foreignIdFor(Shipping::class);
             $table->foreignIdFor(Address::class);
+            $table->foreignIdFor(Tracking::class)->nullable();
             $table->timestamps();
         });
     }

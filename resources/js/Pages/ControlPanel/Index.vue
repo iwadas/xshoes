@@ -8,14 +8,14 @@
         </h1>
 
         <div class="grid grid-cols-10 mx-10 gap-10">
-            <div class="bg-black relative col-span-3 row-span-5 grid place-items-center text-8xl font-bold rounded-xl h-[50vh] overflow-hidden hover:scale-105 duration-200" style="box-shadow: 0 0 20px lightgray">
+            <Link :href="route('control_panel.order.index')" class="bg-black relative col-span-3 row-span-5 grid place-items-center text-8xl font-bold rounded-xl h-[50vh] overflow-hidden hover:scale-105 duration-200" style="box-shadow: 0 0 20px lightgray">
                 <div class="opacity-40 absolute top-0 left-0 w-full h-full">
                     <img src="/public/images/control_panel/orders.jpg" class="object-cover w-full h-full" alt="">
                 </div>
                 <p class="relative text-white" style="text-shadow: 0 0 20px black">
                     Orders
                 </p>
-            </div>
+            </Link>
             <div class="bg-black relative col-span-2 row-span-3 grid place-items-center text-5xl font-bold rounded-xl overflow-hidden hover:scale-105 duration-200" style="box-shadow: 0 0 10px lightgray">
                 <div class="opacity-40 absolute top-0 left-0 w-full h-full">
                     <img src="/public/images/control_panel/sales.jpg" class="object-cover w-full h-full" alt="">
@@ -72,6 +72,6 @@
 
 <script setup>
 
-    import { ref } from 'vue'
+    import { Link } from '@inertiajs/vue3'
 
 </script>

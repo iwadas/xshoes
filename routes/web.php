@@ -13,6 +13,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\PromoCodeController;
 use App\Http\Controllers\ControlPanelController;
+use App\Http\Controllers\ControlPanelOrderController;
 use App\Http\Middleware\IsModerator;
 
 /*
@@ -77,6 +78,13 @@ Route::controller(PaymentController::class)->middleware('auth')->prefix('payment
 
 Route::resource('order', OrderController::class)->middleware('auth')->only(['index', 'destroy', 'show']);
 
-Route::controller(ControlPanelController::class)->name('control_panel.')->prefix('control_panel')->middleware(['auth', IsModerator::class])->group(function(){
-    Route::get('index', 'index')->name('index');
+Route::name('control_panel.')->prefix('control_panel')->middleware(['auth', IsModerator::class])->group(function(){
+    
+    Route::get('index', [ControlPanelController::class, 'index'])->name('index');
+    Route::name('order.')->prefix('order')->controller(ControlPanelOrderController::class)->group(function(){
+        Route::get('index', 'index')->name('index');
+        Route::put('{order}/update', 'update')->name('update');
+        Route::put('{order}/complete', 'complete')->name('complete');
+    });
+
 });
