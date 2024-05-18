@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\IsModerator;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
@@ -14,7 +15,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\PromoCodeController;
 use App\Http\Controllers\ControlPanelController;
 use App\Http\Controllers\ControlPanelOrderController;
-use App\Http\Middleware\IsModerator;
+use App\Http\Controllers\ControlPanelSalesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,5 +87,7 @@ Route::name('control_panel.')->prefix('control_panel')->middleware(['auth', IsMo
         Route::put('{order}/update', 'update')->name('update');
         Route::put('{order}/complete', 'complete')->name('complete');
     });
+
+    Route::get('sales', [ControlPanelSalesController::class, 'index'])->name('sales.index');
 
 });

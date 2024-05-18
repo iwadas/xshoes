@@ -28,10 +28,12 @@ class UserSeeder extends Seeder
         ]);
         $moderator->roles()->attach(2);
 
-        $user = User::factory()->create([
+        User::factory()->create([
             'name' => 'user',
             'email' => 'user@gmail.com',
             'password' => '123123'
         ]);
+
+        User::factory(20)->create();
     }
 }

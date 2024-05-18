@@ -18,7 +18,7 @@
             <div class="flex flex-col gap-y-3">
                 <order v-for="order in orders.data" :order="order" :status="status"></order>
             </div>
-            <pagination :link="orders.links"/>
+            <pagination :links="orders.links" class="mt-4"/>
         </div>
         <div v-else class="mx-auto py-4 px-10 text-2xl font-bold opacity-30 border-dashed rounded-lg w-fit mt-20">
             Everything is completed! 😉

@@ -16,14 +16,14 @@
                     Orders
                 </p>
             </Link>
-            <div class="bg-black relative col-span-2 row-span-3 grid place-items-center text-5xl font-bold rounded-xl overflow-hidden hover:scale-105 duration-200" style="box-shadow: 0 0 10px lightgray">
+            <Link :href="route('control_panel.sales.index')" class="bg-black relative col-span-2 row-span-3 grid place-items-center text-5xl font-bold rounded-xl overflow-hidden hover:scale-105 duration-200" style="box-shadow: 0 0 10px lightgray">
                 <div class="opacity-40 absolute top-0 left-0 w-full h-full">
                     <img src="/public/images/control_panel/sales.jpg" class="object-cover w-full h-full" alt="">
                 </div>
                 <p class="relative text-white" style="text-shadow: 0 0 20px black">
                     Sales
                 </p>
-            </div>
+            </Link>
             <div class="bg-black relative col-span-5 row-span-3 grid place-items-center text-5xl font-bold rounded-xl overflow-hidden hover:scale-105 duration-200" style="box-shadow: 0 0 10px lightgray">
                 <div class="opacity-40 absolute top-0 left-0 w-full h-full">
                     <img src="/public/images/control_panel/manage_products.jpg" class="object-cover w-full h-full" alt="">

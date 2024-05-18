@@ -18,7 +18,7 @@ class ControlPanelOrderController extends Controller
                 )
                 ->with('shipping', 'tracking', 'address', 'payment', 'user')
                 ->with('cart.cart_items', fn($query)=>$query->with(['item.images', 'size']))
-                ->paginate(20)->withQueryString(),
+                ->paginate(10)->withQueryString(),
             'status' => $status,
             'search' => $request->search
         ]);
@@ -36,7 +36,7 @@ class ControlPanelOrderController extends Controller
         return redirect()->back()->with('success', 'Order status successfully updated!');
     }
 
-    public function complete(Request $request, Order $order){
+    public function complete(Order $order){
         $tracking = Tracking::where('id', $order->tracking_id)->first();
         if($tracking->status == 'shipped'){
             $tracking->update([
