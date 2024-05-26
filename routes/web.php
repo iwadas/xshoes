@@ -14,6 +14,8 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\PromoCodeController;
 use App\Http\Controllers\ControlPanelController;
+use App\Http\Controllers\ControlPanelItemController;
+use App\Http\Controllers\ControlPanelNewsController;
 use App\Http\Controllers\ControlPanelOrderController;
 use App\Http\Controllers\ControlPanelSalesController;
 
@@ -82,6 +84,7 @@ Route::resource('order', OrderController::class)->middleware('auth')->only(['ind
 Route::name('control_panel.')->prefix('control_panel')->middleware(['auth', IsModerator::class])->group(function(){
     
     Route::get('index', [ControlPanelController::class, 'index'])->name('index');
+    
     Route::name('order.')->prefix('order')->controller(ControlPanelOrderController::class)->group(function(){
         Route::get('index', 'index')->name('index');
         Route::put('{order}/update', 'update')->name('update');
@@ -89,5 +92,18 @@ Route::name('control_panel.')->prefix('control_panel')->middleware(['auth', IsMo
     });
 
     Route::get('sales', [ControlPanelSalesController::class, 'index'])->name('sales.index');
+
+    Route::name('news.')->prefix('news')->controller(ControlPanelNewsController::class)->group(function(){
+        Route::get('', 'index')->name('index');
+        Route::post('', 'store')->name('store');
+        Route::delete('{news}', 'destroy')->name('destroy');
+    });
+    
+    Route::name('item.')->prefix('item')->controller(ControlPanelItemController::class)->group(function(){
+        Route::get('', 'index')->name('index');
+        Route::post('{item}', 'update')->name('update');
+        Route::post('', 'store')->name('store');
+        Route::delete('{item}', 'destroy')->name('destroy');
+    });
 
 });

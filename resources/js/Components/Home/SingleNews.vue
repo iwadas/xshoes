@@ -8,7 +8,7 @@
             <div class="absolute top-1/2 -translate-x-1/2 left-1/2 -translate-y-1/2 font-teko text-5xl font-bold whitespace-nowrap" :style="'color: ' + news.color">
                 {{ news.header }}
             </div>
-            <img :src="news.src" class="w-full h-full object-cover">
+            <img :src="news.src" class="w-full h-full object-cover" loading="lazy">
         </div>
     </div>
 

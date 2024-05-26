@@ -9,7 +9,7 @@ class News extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'image', 'color'];
+    protected $fillable = ['header', 'image', 'color'];
     protected $appends = ['src'];
 
     public function getSrcAttribute(){

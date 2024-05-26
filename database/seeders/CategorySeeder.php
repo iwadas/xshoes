@@ -59,9 +59,8 @@ class CategorySeeder extends Seeder
         $kidClothes = $this->createSubCategory($categoryKid->id, 'clothes', 'fa-shirt');
         $kidClothesHats = $this->createSubCategory($kidClothes->id, 'hats', 'fa-hat-cowboy');
         $kidClothesTops = $this->createSubCategory($kidClothes->id, 'tops', 'fa-shirt');
-        $kidClothingTrousers = $this->createSubCategory($kidClothes->id, 'dresses', 'fa-socks');
-        $kidClothingDresses = $this->createSubCategory($womenClothes->id, 'dresses', 'fa-person-dress');
-
+        $kidClothingTrousers = $this->createSubCategory($kidClothes->id, 'trousers', 'fa-socks');
+        $kidClothingDresses = $this->createSubCategory($kidClothes->id, 'dresses', 'fa-person-dress');
     }
 
     private function createSubCategory(int $parentId, string $name, string $icon, string $image = null){
