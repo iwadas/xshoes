@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('key');
             $table->enum('status', ['in_progress', 'completed', 'cancelled'])->default('in_progress');
             $table->float("price");
+            $table->float("discount")->nullable();
             $table->string('payment_source')->nullable();
             $table->timestamps();
         });

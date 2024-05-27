@@ -105,5 +105,13 @@ Route::name('control_panel.')->prefix('control_panel')->middleware(['auth', IsMo
         Route::post('', 'store')->name('store');
         Route::delete('{item}', 'destroy')->name('destroy');
     });
+    
+    Route::name('promo_code.')->prefix('promo_code')->controller(PromoCodeController::class)->group(function(){
+        Route::get('', 'index')->name('index');
+        Route::get('create', 'create')->name('create');
+        Route::put('{promo_code}', 'update')->name('update');
+        Route::post('', 'store')->name('store');
+        Route::delete('{promo_code}', 'destroy')->name('destroy');
+    });
 
 });

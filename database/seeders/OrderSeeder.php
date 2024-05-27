@@ -43,7 +43,7 @@ class OrderSeeder extends Seeder
                         'size_id' => $itemSize->size_id,
                         'amount' => $amount
                     ]);
-                    $price += Item::find($itemSize->item_id)->price;
+                    $price += Item::find($itemSize->item_id)->price * $amount;
                 }
    
                 //get random shipping

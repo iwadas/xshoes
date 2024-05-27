@@ -9,6 +9,8 @@ class PromoCode extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name', 'discount', 'type', 'available_till', 'price_from', 'for_new_users'];
+
     public function carts(){
         return $this->hasMany(Cart::class);
     }

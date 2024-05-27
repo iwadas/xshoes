@@ -15,7 +15,7 @@ class OrderController extends Controller
         return inertia("Order/Index", [
             'orders' => $request->user()->orders()
                 ->whereHas('payment', fn($query)=>$query->where('status', 'completed'))
-                ->with('shipping', 'address', 'payment', 'tracking')
+                ->with('shipping', 'address', 'payment', 'tracking', 'cart')
                 ->with('cart.cart_items', 
                     fn($query)=>$query->with('size')->with('item.images',
                         fn($query)=>$query->where('main', true))
@@ -24,7 +24,7 @@ class OrderController extends Controller
                 ->get(),
             'uncompleted_orders' => $request->user()->orders()
                 ->whereHas('payment', fn($query)=>$query->where('status', 'in_progress'))
-                ->with('shipping', 'address', 'payment')
+                ->with('shipping', 'address', 'payment', 'cart')
                 ->with('cart.cart_items', 
                     fn($query)=>$query->with('size')->with('item.images',
                         fn($query)=>$query->where('main', true))
@@ -66,7 +66,8 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         return inertia("Order/Show", [
-            'order' => $order->load(['shipping', 'address', 'cart', 'payment', 'tracking'])->load(['cart.cart_items' => fn($query)=>$query->with('item.images', 'size')])
+            // 'order' => $order->load(['shipping', 'address', 'payment', 'tracking'])->load(['cart.cart_items' => fn($query)=>$query->with('item.images', 'size')])
+            'order' => $order->load(['shipping', 'address', 'payment', 'tracking'])->load(['cart' => fn($query)=>$query->with('promo_code')->with('cart_items', fn($query)=>$query->with('item.images', 'size'))])
         ]);
     }
 

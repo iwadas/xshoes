@@ -12,8 +12,10 @@ use App\Models\ItemSize;
 use App\Models\Shipping;
 use App\Models\Tracking;
 use Stripe\StripeClient;
+use App\Models\PromoCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 
@@ -28,15 +30,25 @@ class PaymentController extends Controller
             return $this->redirectWithError($errors['url'], $errors['error']);
         }
 
-        $shipping = Shipping::find($request->shipping_id);
+        $price = $this->getCartPrice($cart);
 
-        $price = $this->getCartPrice($cart, $shipping);
+        if($promoCode = $cart->promo_code()->first()){
+            $discount = $this->getDiscountAmount($promoCode, $price);
+            if(!$discount){
+                $cart->update(['promo_code_id' => null]);
+                return $this->redirectWithError(route('checkout.index'), "You no longer quality for previous promo code!");
+            }
+            $price = $price - $discount;
+        }
+
+        $shipping = Shipping::find($request->shipping_id);
+        $price += $shipping->price;
 
         $response = $this->getPaypalResponse($price);
 
         if($responseUrl = $this->getPaypalResponseUrl($response)){
             
-            $payment = $this->createPayment($response['id'], $price, 'paypal', $request->user()->id);
+            $payment = $this->createPayment($response['id'], $price, 'paypal', $request->user()->id, $discount);
             $this->createOrder($payment, $request);
             $this->detachCartFromUser($cart);
 
@@ -54,16 +66,26 @@ class PaymentController extends Controller
             return $this->redirectWithError($errors['url'], $errors['error']);
         }
 
+        $price = $this->getCartPrice($cart);
+
+        $discount = 0;
+        if($promoCode = $cart->promo_code()->first()){
+            $discount = $this->getDiscountAmount($promoCode, $price);
+            if(!$discount){
+                $cart->update(['promo_code_id' => null]);
+                return $this->redirectWithError(route('checkout.index'), "You no longer quality for previous promo code!");
+            }
+            $price -= $discount;
+        }
+
         $shipping = Shipping::find($request->shipping_id);
+        $price += $shipping->price;
 
-        $price = $this->getCartPrice($cart, $shipping);
-
-        $response = $this->getStripeResponse($cart, $shipping);
+        $response = $this->getStripeResponse($cart, $shipping, $discount);
 
         if(isset($response->id) && $response->id != ''){
             
-
-            $payment = $this->createPayment($response->id, $price, 'stripe', $request->user()->id);
+            $payment = $this->createPayment($response->id, $price, 'stripe', $request->user()->id, $discount);
             $this->createOrder($payment, $request);
             $this->detachCartFromUser($cart);
 
@@ -173,7 +195,7 @@ class PaymentController extends Controller
         if($address->user_id != $request->user()->id){
             return ['url' => route('checkout.index'), 'error' => "Address hasn't been found!"];
         }
-        
+
         $adjusted = 0;
         // check whether items are available
         foreach($cart->cart_items()->get() as $cartItem){
@@ -206,12 +228,29 @@ class PaymentController extends Controller
 
     }
 
-    private function getCartPrice(Cart $cart, Shipping $shipping){
-        $price = $cart->cart_items()
+    private function getDiscountAmount(PromoCode $promoCode, float $price){
+        if($price < $promoCode->price_from){
+            return 0;   
+        }
+        if(Carbon::now() > $promoCode->available_till){
+            return 0;   
+        }
+        if($promoCode->for_new_users){
+            if(Auth::user()->payments()->where('status', 'completed')->exists()){
+                return 0;   
+            }
+        }
+        if($promoCode->type == 'percentage'){
+            return $price * $promoCode->discount /100;
+        } else {
+            return  $promoCode->discount;
+        }
+    }
+
+    private function getCartPrice(Cart $cart){
+        return $cart->cart_items()
             ->join('items', 'cart_items.item_id', '=', 'items.id')
             ->sum(DB::raw('cart_items.amount * items.price'));
-        $price += $shipping->price;
-        return $price;
     }
 
     private function getPaypalResponse(float $price){
@@ -238,41 +277,66 @@ class PaymentController extends Controller
         return $provider->createOrder($data);
     }
 
-    private function getStripeResponse(Cart $cart, Shipping $shipping){
+    private function getStripeResponse(Cart $cart, Shipping $shipping, float $discount) {
         $stripe = new StripeClient(config('stripe.stripe_sk'));
-
+    
         $lineItems = [];
-        foreach($cart->cart_items()->get() as $cartItem){
+        foreach ($cart->cart_items()->get() as $cartItem) {
             array_push($lineItems, [
                 'price_data' => [
                     'currency' => 'usd',
                     'product_data' => [
-                        'name' => $cartItem->item->name." ".$cartItem->size->name,
+                        'name' => $cartItem->item->name . " " . $cartItem->size->name,
                     ],
-                    'unit_amount' => $cartItem->item->price*100,
+                    'unit_amount' => $cartItem->item->price * 100,
                 ],
                 'quantity' => $cartItem->amount,
             ]);
-        }    
-
-        return $stripe->checkout->sessions->create([
-            'line_items' => [
-                ...$lineItems,
-                [
-                    'price_data' => [
-                        'currency' => 'usd',
-                        'product_data' => [
-                            'name' => $shipping->name.' shipping',
-                        ],
-                        'unit_amount' => $shipping->price * 100,
-                    ],
-                    'quantity' => 1
-                ]
+        }
+    
+        // Add shipping cost as a line item
+        array_push($lineItems, [
+            'price_data' => [
+                'currency' => 'usd',
+                'product_data' => [
+                    'name' => $shipping->name . ' shipping',
+                ],
+                'unit_amount' => $shipping->price * 100,
             ],
-            'mode' => 'payment',
-            'success_url' => route('payment.success.stripe').'?session_id={CHECKOUT_SESSION_ID}',
-            'cancel_url' => route('payment.cancel.stripe').'?session_id={CHECKOUT_SESSION_ID}'
+            'quantity' => 1,
         ]);
+    
+        // Create discount coupon if discount is provided
+        $discountCouponId = null;
+        if ($discount) {
+            $coupon = $stripe->coupons->create([
+                'amount_off' => $discount * 100,
+                'currency' => 'usd',
+                'duration' => 'once',
+            ]);
+            $discountCouponId = $coupon->id;
+        }
+    
+        // Prepare session data
+        $sessionData = [
+            'payment_method_types' => ['card'],
+            'line_items' => $lineItems,
+            'mode' => 'payment',
+            'success_url' => route('payment.success.stripe') . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => route('payment.cancel.stripe') . '?session_id={CHECKOUT_SESSION_ID}',
+        ];
+    
+        // Add discount to the session data if available
+        if ($discountCouponId) {
+            $sessionData['discounts'] = [[
+                'coupon' => $discountCouponId,
+            ]];
+        }
+    
+        // Create the checkout session
+        $checkout_session = $stripe->checkout->sessions->create($sessionData);
+    
+        return $checkout_session;
     }
 
     private function getPaypalResponseUrl($response){
@@ -292,12 +356,13 @@ class PaymentController extends Controller
         return response()->json(['error_url' => $url]);
     }
 
-    private function createPayment(string $key, float $price, string $method, int $userId){
+    private function createPayment(string $key, float $price, string $method, int $userId, $discount){
         $payment = Payment::create([
             'user_id' => $userId,
             'key' => $key,
             'price' => $price,
             'by' => $method,
+            'discount' => $discount
         ]);
         return $payment;
     }

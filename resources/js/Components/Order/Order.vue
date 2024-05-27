@@ -3,8 +3,9 @@
     <div class="flex flex-col rounded-lg pb-1"  style="box-shadow: 0 0 10px lightgray">
         <div class="flex justify-between py-3 border-b px-8 shadow-lg rounded-t-lg" :class="{'bg-red-200' : uncompleted}">
             <div class="flex flex-col gap-y-1 text-lg">
-                <p>status: <span class="font-semibold text-purple-500">{{ capitalizeFirstLetter(order.tracking.status) }}</span></p>
+                <p>status: <span class="font-semibold text-purple-500">{{ order.tracking ? capitalizeFirstLetter(order.tracking.status) : null }}</span></p>
                 <p>purchased: <span class="font-semibold">{{ created_at }}</span></p>
+                <p v-if="order.payment.discount">discount: <span class="font-semibold text-purple-500">-{{ order.payment.discount }}$</span></p>
                 <p>total: <span class="font-semibold">{{ order.payment.price }}$</span></p>
             </div>
             <div v-if="uncompleted">

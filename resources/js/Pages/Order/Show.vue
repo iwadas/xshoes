@@ -18,6 +18,7 @@
                     <order-item v-for="cartItem, index in order.cart.cart_items" :cart-item="cartItem" :class="index == order.cart.cart_items.length - 1 ? null : 'border-b'"/>
                 </div>
             </div>
+
             <div class="flex flex-col rounded-lg py-2 px-10 h-fit gap-y-4"  style="box-shadow: 0 0 10px lightgray">
                 <div>
                     <h2 class="font-semibold">Shipping</h2>
@@ -28,6 +29,20 @@
                         <div>
                             price: <span class="font-bold">{{ order.shipping.price }}$</span>
                         </div>
+                    </div>
+                </div>
+                <div v-if="order.cart.promo_code_id">
+                    <h2 class="font-semibold">Promo Code</h2>
+                    <div class="flex justify-between items-center py-2 px-4">
+                        <p class="text-purple-500 font-semibold">
+                            {{ order.cart.promo_code.name }}
+                        </p>
+                        <p>
+                            -
+                            <span class="font-bold">
+                                {{ order.payment.discount }}$
+                            </span>
+                        </p>
                     </div>
                 </div>
                 <div>
