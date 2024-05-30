@@ -21,7 +21,7 @@ class CategorySeeder extends Seeder
 
         $categoryWomen = Category::create([
             'name' => 'women',
-            'icon' => 'fa-person',
+            'icon' => 'fa-person-dress',
             'image' => 'categories/women.webp'
         ]);
 

@@ -1,6 +1,10 @@
 <template>
 
     <div class="flex flex-col px-5 pb-4">
+        <div class="ml-auto w-fit mt-3">
+            <i class="fa-solid text-[11px] mr-1" :class="itemObject.item.is_bestseller ? 'fa-heart-crack' : 'fa-star'"></i>
+            <Link preserve-scroll :href='route("control_panel.item.bestseller", {item: itemObject.item.id})' as="button" method="PUT" class="text-purple-500 hover:underline text-xs font-semibold">{{ itemObject.item.is_bestseller ? 'Unset as bestseller' :  'Set as bestseller'}}</Link>
+        </div>
         <div class="flex justify-between py-4">
             <div class="h-20 w-20">
                 <img :src="itemObject.item.images[0].src" alt="" class="w-full h-full object-cover">
@@ -26,6 +30,7 @@
                 </div>
             </div>
         </div>
+   
 
     </div>
 

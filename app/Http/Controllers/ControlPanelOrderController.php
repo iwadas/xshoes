@@ -14,9 +14,10 @@ class ControlPanelOrderController extends Controller
         return inertia("ControlPanelOrder/Index", [
             'orders' => Order::whereHas('tracking', fn($query)=>$query->where('status', $status))
                 ->when($request->search ?? false, 
-                    fn($query, $value)=>$query->whereHas('user', fn($query)=>$query->where('name', 'like', '%'.$value.'%')->orWhere('email', 'like', '%'.$value.'%'))
+                    fn($query, $value)=>$query->whereHas('user', fn($query)=>$query->withTrashed()->where('name', 'like', '%'.$value.'%')->orWhere('email', 'like', '%'.$value.'%'))
                 )
-                ->with('shipping', 'tracking', 'address', 'payment', 'user')
+                ->with('shipping', 'tracking', 'address', 'payment')
+                ->with('user', fn($query)=>$query->withTrashed())
                 ->with('cart.cart_items', fn($query)=>$query->with(['item.images', 'size']))
                 ->paginate(10)->withQueryString(),
             'status' => $status,

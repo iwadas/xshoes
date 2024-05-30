@@ -10,7 +10,7 @@
         </button>
     </div>
     <div v-if="showChildCategories && category.children" class="pl-11">
-        <child-category v-for="childCategory in category.children" :category="childCategory" :key="childCategory.id"/>
+        <child-category v-for="childCategory in category.children" :category="childCategory" :key="childCategory.id" @toggle-show-category="emit('toggle-show-category')"/>
     </div>
 
 </template>

@@ -21,8 +21,7 @@
 
 <script setup>
 
-    import { Link } from '@inertiajs/vue3'
-    import { computed, ref } from 'vue'
+    import { computed } from 'vue'
     import ChildCategory from '@/Components/MainLayout/ChildCategory.vue';
 
     const props = defineProps({
@@ -37,7 +36,6 @@
     );
 
     const toggleChildCategories = () => {
-        console.log(props.category.id)
         emit('toggleShowCategory', props.category.id)
     }
 

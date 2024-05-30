@@ -18,6 +18,7 @@ use App\Http\Controllers\ControlPanelItemController;
 use App\Http\Controllers\ControlPanelNewsController;
 use App\Http\Controllers\ControlPanelOrderController;
 use App\Http\Controllers\ControlPanelSalesController;
+use App\Http\Controllers\ControlPanelUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -102,6 +103,7 @@ Route::name('control_panel.')->prefix('control_panel')->middleware(['auth', IsMo
     Route::name('item.')->prefix('item')->controller(ControlPanelItemController::class)->group(function(){
         Route::get('', 'index')->name('index');
         Route::post('{item}', 'update')->name('update');
+        Route::put('bestseller/{item}', 'toggleBestselling')->name('bestseller');
         Route::post('', 'store')->name('store');
         Route::delete('{item}', 'destroy')->name('destroy');
     });
@@ -111,7 +113,14 @@ Route::name('control_panel.')->prefix('control_panel')->middleware(['auth', IsMo
         Route::get('create', 'create')->name('create');
         Route::put('{promo_code}', 'update')->name('update');
         Route::post('', 'store')->name('store');
-        Route::delete('{promo_code}', 'destroy')->name('destroy');
+    });
+
+    Route::name('user.')->prefix('user')->controller(ControlPanelUserController::class)->group(function(){
+        Route::put('restore/{user}', 'restore')->name('restore')->withTrashed();
+        Route::get('', 'index')->name('index');
+        Route::put('{user}', 'update')->name('update');
+        Route::delete("{user}", 'destroy')->name('destroy');
+
     });
 
 });

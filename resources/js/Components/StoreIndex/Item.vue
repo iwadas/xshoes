@@ -1,6 +1,12 @@
 <template>
     <div class="flex flex-col rounded-lg shadow-lg pt-2 pb-4 px-4 relative" style="box-shadow: 0 0 10px lightgray">
         <item-brands :brands="item.brands" class="absolute top-3 left-3 z-10"/>
+        <div v-if="item.is_bestseller" class="absolute top-3 right-3 z-10">
+            <div class="font-semibold py-1 px-2 rounded-lg bg-purple-500 text-white">
+                <i class="fa-solid fa-star text-sm"></i>
+                Bestseller
+            </div>
+        </div>
         <div class="h-80 w-full relative">
             <div class="w-full h-full absolute grid place-items-center bg-transparent-white opacity-0 hover:opacity-100 duration-100">
                 <item-sizes 

@@ -140,8 +140,17 @@ class ControlPanelItemController extends Controller
         return redirect()->back()->with('success', 'Item created successfully');
     }
 
-    public function destroy(Item $item){
+    public function toggleBestselling(Item $item){
+        $prevState = $item->is_bestseller;
+        $item->update([
+            'is_bestseller' => !$prevState
+        ]);
+        return redirect()->back()->with('success', 'Item updated successfully');
+    }
 
+    public function destroy(Item $item){
+        $item->delete();
+        return redirect()->back()->with('success', 'Item successfully removed!');
     }
 
 

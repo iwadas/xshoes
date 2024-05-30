@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->unsignedFloat('price');
             $table->longText('description');
+            $table->boolean('is_bestseller')->default(false);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

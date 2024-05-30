@@ -29,10 +29,17 @@
             </button>
         </div>
         <div v-if="!showInstruction && !selectCategories">
-            <button @click="createNew" v-if="form.id" class="absolute z-10 top-0 right-6 text-purple-500 hover:underline font-semibold text-xl">
-                <i class="fa-solid fa-circle-plus text-lg"></i>
-                Create new
-            </button>
+            <div class="flex absolute z-10 top-0 right-6 gap-x-8">
+                <button @click="deleteItem" v-if="form.id" class=" text-red-500 hover:underline font-semibold text-xl">
+                    <i class="fa-solid fa-trash text-lg"></i>
+                    Delete
+                </button>
+                <button @click="createNew" v-if="form.id" class=" text-purple-500 hover:underline font-semibold text-xl">
+                    <i class="fa-solid fa-circle-plus text-lg"></i>
+                    Create new
+                </button>
+            </div>
+ 
             <h2 v-if="form.id" class="text-2xl font-semibold">
                 <i class="fa-solid fa-pen-to-square text-purple-500 text-xl mr-2"></i>
                 Edit {{ item.name }}
@@ -150,7 +157,7 @@
 <script setup>
 
     import ItemPreview from '@/Components/ControlPanelItem/ItemPreview.vue'
-    import { useForm } from '@inertiajs/vue3';
+    import { useForm, router } from '@inertiajs/vue3';
     import { watch, ref, computed, reactive } from 'vue'
 
     const props = defineProps({
@@ -243,6 +250,12 @@
         form.sizes = [];
         form.sizes_to_adjust = {};
         form.colors = [];
+    }
+
+    const deleteItem = () => {
+        if(confirm("Are you sure your want to delete this item?")){
+            router.delete(route('control_panel.item.destroy', {item: props.item.id}), {onSuccess: ()=>{showInstruction.value = true}})
+        }
     }
 
     const updateForm = () => {

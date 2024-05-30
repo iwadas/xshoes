@@ -41,7 +41,7 @@ class ControlPanelSalesController extends Controller
         }
 
         usort($items, function($a, $b) {
-            return $b['sold'] <=> $a['sold'];
+            return $b['sold'] >= $a['sold'];
         });
 
         return inertia('ControlPanelSales/Index', [

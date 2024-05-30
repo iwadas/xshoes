@@ -17,7 +17,8 @@ class ItemFactory extends Factory
     public function definition(): array
     {
         return [
-            'description' => $this->faker->sentence(15, 50)
+            'description' => $this->faker->sentence(15, 50),
+            'is_bestseller' => rand(0, 3) === 0
         ];
     }
 }

@@ -32,6 +32,15 @@
                     Manage products
                 </p>
             </Link>      
+
+            <Link :href="route('control_panel.user.index')" class="bg-black relative col-span-3 row-span-2 grid place-items-center text-3xl font-bold rounded-xl overflow-hidden hover:-translate-y-1 duration-200" style="box-shadow: 0 0 10px lightgray">
+                <div class="opacity-40 absolute top-0 left-0 w-full h-full">
+                    <img src="/public/images/control_panel/user_list.jpg" class="object-cover w-full h-full" alt="" loading="lazy">
+                </div>
+                <p class="absolute text-white" style="text-shadow: 0 0 20px black">
+                    Users List
+                </p>
+            </Link>
             <Link :href="route('control_panel.news.index')" class="bg-black relative col-span-2 row-span-2 grid place-items-center text-3xl font-bold rounded-xl overflow-hidden hover:-translate-y-1 duration-200" style="box-shadow: 0 0 10px lightgray">
                 <div class="opacity-40 absolute top-0 left-0 w-full h-full">
                     <img src="/public/images/control_panel/news.jpg" class="object-cover w-full h-full" alt="" loading="lazy">
@@ -40,14 +49,6 @@
                     News
                 </p>
             </Link>
-            <div class="bg-black relative col-span-3 row-span-2 grid place-items-center text-3xl font-bold rounded-xl overflow-hidden hover:-translate-y-1 duration-200" style="box-shadow: 0 0 10px lightgray">
-                <div class="opacity-40 absolute top-0 left-0 w-full h-full">
-                    <img src="/public/images/control_panel/help.jpg" class="object-cover w-full h-full" alt="" loading="lazy">
-                </div>
-                <p class="absolute text-white" style="text-shadow: 0 0 20px black">
-                    Help
-                </p>
-            </div>
             <Link :href="route('control_panel.promo_code.index')" class="bg-black relative col-span-2 row-span-2 grid place-items-center text-3xl font-bold rounded-xl overflow-hidden hover:-translate-y-1 duration-200" style="box-shadow: 0 0 10px lightgray">
                 <div class="opacity-40 absolute top-0 left-0 w-full h-full">
                     <img src="/public/images/control_panel/promo_codes.jpg" class="object-cover w-full h-full" alt="" loading="lazy">

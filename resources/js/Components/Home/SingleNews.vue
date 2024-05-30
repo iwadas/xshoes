@@ -2,10 +2,10 @@
 
     <div class="duration-1000 rounded-lg absolute h-fit" style="width: 28vw" :style="customStyle">
         <div class="grid place-items-center rounded-lg overflow-hidden w-full relative" style="height: 28vw;">
-            <div class="absolute top-1/2 -translate-x-1/2 left-1/2 -translate-y-1/2 mt-0.5 ml-0.5 font-teko text-white text-5xl font-bold whitespace-nowrap">
+            <div class="absolute top-1/2 -translate-x-1/2 left-1/2 -translate-y-1/2 mt-0.5 ml-0.5 font-teko text-white text-5xl font-bold text-center">
                 {{ news.header }}
             </div>
-            <div class="absolute top-1/2 -translate-x-1/2 left-1/2 -translate-y-1/2 font-teko text-5xl font-bold whitespace-nowrap" :style="'color: ' + news.color">
+            <div class="absolute top-1/2 -translate-x-1/2 left-1/2 -translate-y-1/2 font-teko text-5xl font-bold text-center" :style="'color: ' + news.color">
                 {{ news.header }}
             </div>
             <img :src="news.src" class="w-full h-full object-cover" loading="lazy">
