@@ -16,7 +16,6 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Item::class);
             $table->string('image');
-            $table->boolean('main')->default(false);
             $table->timestamps();
         });
     }

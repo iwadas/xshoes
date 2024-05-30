@@ -8,7 +8,7 @@
         </h1>
         <div class="grid grid-cols-10 gap-3 mx-6">
             <current-items :categories="categories" :selected-item-id="selectedItem ? selectedItem.id : null" class="col-span-3 px-10 border-r" @update-selected-item="updateSelectedItem"/>
-            <item-form :item="selectedItem" :colors="colors" :categories="categories" :sizes="sizes" @creating-new="deselectItem()"/>
+            <item-form :item="selectedItem" :colors="colors" :categories="categories" :sizes="sizes" :brands="brands" @creating-new="deselectItem()"/>
         </div>
     </div>
 
@@ -24,6 +24,7 @@
         categories: Array,
         sizes: Array,
         colors: Array,
+        brands: Array,
         updatedItem: Object,
     })
 

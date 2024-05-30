@@ -27,6 +27,17 @@ class BrandSeeder extends Seeder
             ['name' => 'Palm Angels'],
             ['name' => 'Travis Scott'],
             ['name' => 'Evisu'],
+            ['name' => 'Crocs'],
+            ['name' => 'Off-White'],
+            ['name' => 'Gucci'],
+            ['name' => 'Louis Vuitton'],
+            ['name' => 'Prada'],
+            ['name' => 'Fear of God'],
+            ['name' => 'Saint Laurent'],
+            ['name' => 'Rick Owens'],
+            ['name' => 'Vetements'],
+            ['name' => 'Comme des Garçons'],
+            ['name' => 'Givenchy']
         ]);
     }
 }

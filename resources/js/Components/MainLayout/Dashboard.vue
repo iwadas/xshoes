@@ -10,7 +10,10 @@
              </button>
             <button @click="redirectOrders" class="py-1.5 px-12 gap-x-2 flex justify-between items-center">
                 <i class="fa-solid fa-shopping-bag"></i>
-                <span class="hover:underline">
+                <span class="hover:underline relative">
+                    <div v-if="uncompletedOrders" class="absolute -top-1 -right-3 text-[10px] text-purple-500 text-base grid place-items-center rounded-full">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                    </div>
                     Orders
                 </span>           
              </button>
@@ -28,7 +31,9 @@
                 {{user.name}}
                 <div class="button-special-front">
                     <div class="button-special-text-2 relative">
-                        <div v-if="uncompletedOrders" class="absolute -top-1 -right-3 text-[10px] h-4 w-4 grid place-items-center rounded-full bg-purple-500 text-white"></div>
+                        <div v-if="uncompletedOrders" class="absolute -top-1 -right-3 text-[10px] text-purple-500 text-base grid place-items-center rounded-full">
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                        </div>
                         <i class="fa-solid fa-user text-sm text-purple-500"></i>
                         {{user.name}}
                     </div>

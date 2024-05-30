@@ -19,9 +19,9 @@ class StoreController extends Controller
         $filters = $request->only(['category', 'brands', 'colors', 'sizes']);
         $selectedCategory = Category::find($filters['category'] ?? null);
 
-        $items = Item::with(['brands', 'colors', 'available_sizes'])
+        $items = Item::with(['brands', 'colors', 'available_sizes', 'images'])
             ->with(['categories' =>  fn($query)=>$query->orderBy('categories.id')])
-            ->with('images', fn($query)=>$query->where('main', true))
+            // ->with('images', fn($query)=>$query->limit(1))
             ->categoryFilter($filters['category'] ?? 0);
     
         $itemsId = $items->pluck('id');

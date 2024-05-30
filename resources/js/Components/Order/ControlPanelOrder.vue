@@ -16,7 +16,7 @@
             <div>
                 address:
             </div>
-            <div class="flex justify-between w-1/2 bg-gray-200 px-4 rounded-lg py-3">
+            <div class="flex justify-between w-2/3 bg-gray-200 px-4 rounded-lg py-3">
                 <div class="flex flex-col gap-y-2">
                     <div>
                         name: <span class="font-semibold">{{ order.address.name }}</span>

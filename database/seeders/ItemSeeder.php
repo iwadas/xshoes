@@ -107,14 +107,6 @@ class ItemSeeder extends Seeder
             $item->sizes()->attach($sizeId, ['amount' => max(0, rand(-10, $this->amount[$sizeAmount]))]);
         }
         
-        // creating main picture
-        ItemImage::create([
-            'image' => $images[0],
-            'item_id' => $item->id,
-            'main' => true,
-        ]);
-        unset($images[0]);
-
         foreach($images as $image){
             ItemImage::create([
                 'image' => $image,

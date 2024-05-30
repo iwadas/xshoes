@@ -19,7 +19,7 @@ class AddressFactory extends Factory
         return [
             'name' => fake()->firstName(),
             'surname' => fake()->lastName(),
-            'address' => fake()->address(),
+            'address' => fake()->streetAddress(),
             'post_code' => fake()->postcode(),
             'city' => fake()->city(),
             'phone_number' => preg_replace('/[^0-9]/', '', fake()->phoneNumber()),

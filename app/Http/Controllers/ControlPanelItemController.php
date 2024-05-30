@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\Size;
+use App\Models\Brand;
 use App\Models\Color;
 use App\Models\Category;
 use App\Models\ItemSize;
@@ -14,12 +15,13 @@ class ControlPanelItemController extends Controller
 {
     public function index(Request $request){
 
-        $categoriesWithItems = Category::whereDoesntHave('parent')->with('children.children.items', fn($query)=>$query->with(['images', 'sizes', 'colors'])->with('categories', fn($query)=>$query->orderBy('id')))->get();
+        $categoriesWithItems = Category::whereDoesntHave('parent')->with('children.children.items', fn($query)=>$query->with(['images', 'sizes', 'colors', 'brands'])->with('categories', fn($query)=>$query->orderBy('id')))->get();
 
         return inertia('ControlPanelItem/Index', [
             'categories' =>  $categoriesWithItems,
             'sizes' => Size::orderBy('id')->get(),
             'colors' => Color::all(),
+            'brands' => Brand::all(),
         ]);
     }
 
@@ -35,6 +37,8 @@ class ControlPanelItemController extends Controller
             'newImages.*' => 'sometimes|file|mimes:png,jpg,webp|max:10000',
             'colors' => 'required|array',
             'colors.*' => 'integer',
+            'brands' => 'required|array',
+            'brands.*' => 'integer',
         ]);
 
         //images old
@@ -45,6 +49,7 @@ class ControlPanelItemController extends Controller
                 $image->delete();
             }
         };
+
         //images new
         $categories = $item->categories()->orderBy('id')->get();
         foreach($request->newImages as $image){
@@ -76,6 +81,19 @@ class ControlPanelItemController extends Controller
             }
         }
 
+        $itemBrands = $item->colors()->get();
+        foreach($itemBrands as $brand){
+            if(!in_array($brand->id, $request->brands)){
+                $item->colors()->detach($brand->id);
+            }
+        }
+        
+        foreach($request->brands as $brand){
+            if(!$item->brands()->find($brand)){
+                $item->brands()->attach($brand);
+            }
+        }
+
         $item->update(
             $request->only(['price', 'name', 'description'])
         );
@@ -85,6 +103,7 @@ class ControlPanelItemController extends Controller
 
     public function store(Request $request){
         
+
         $request->validate([
             'name' => 'required|string',
             'price' => 'required|min:0|numeric',
@@ -96,6 +115,8 @@ class ControlPanelItemController extends Controller
             'newImages.*' => 'file|mimes:png,jpg,webp|max:10000',
             'colors' => 'required|array',
             'colors.*' => 'integer',
+            'brands' => 'required|array',
+            'brands.*' => 'integer',
         ]);
 
         $item = Item::create($request->only(['price', 'description', 'name']));
@@ -103,12 +124,13 @@ class ControlPanelItemController extends Controller
         $categories = [];
 
         foreach($request->categories as $categoryId){
-            $item->attach($categoryId);
+            $item->categories()->attach($categoryId);
             array_push($categories, Category::find($categoryId));
         }
 
-        foreach($request->newImages as $image){
-            $image_path = $image->store('/'.$categories[0]['name'].'/'.$categories[1]['name'].'/'.$categories[2]['name'], 'public');
+        foreach($request->newImages as $key => $image){
+            $pathName = strtolower(str_replace(' ', '_', '/'.$categories[0]['name'].'/'.$categories[1]['name'].'/'.$categories[2]['name'].'/'.$request->name));
+            $image_path = $image->store($pathName, 'public');
             $item->images()->create(['image' => $image_path]);
         };
 
@@ -135,6 +157,10 @@ class ControlPanelItemController extends Controller
 
         foreach($request->colors as $color){
             $item->colors()->attach($color);
+        }
+
+        foreach($request->brands as $brand){
+            $item->brands()->attach($brand);
         }
 
         return redirect()->back()->with('success', 'Item created successfully');

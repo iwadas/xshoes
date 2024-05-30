@@ -9,7 +9,7 @@ class ItemImage extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['image', 'item_id', 'main'];
+    protected $fillable = ['image', 'item_id'];
 
     protected $appends = ['src'];
 

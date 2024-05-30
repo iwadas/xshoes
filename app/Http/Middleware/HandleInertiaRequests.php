@@ -46,7 +46,7 @@ class HandleInertiaRequests extends Middleware
             'categories' => Category::whereDoesntHave('parent')->with('children', fn($query)=>$query->with('children'))->get(),
             'cart_items' => $request->user()  
                 ? ($request->user()->cart 
-                    ? $request->user()->cart->cart_items()->with('item', fn($query)=>$query->with('images', fn($query)=>$query->where('main', true)))->with('size')->get() 
+                    ? $request->user()->cart->cart_items()->with('item.images', 'size')->get() 
                     : null) 
                 : null,
             'uncompleted_orders_count' => $request->user() 

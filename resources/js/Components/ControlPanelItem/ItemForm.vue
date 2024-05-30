@@ -107,6 +107,17 @@
                     >
                     </button>
                 </div>
+                <label class=" bg-white px-2 text-sm font-semibold">Brands</label>
+                <div class="flex flex-wrap px-10 gap-4 py-5">
+                    <button    
+                        v-for="brand in brands" :key="brand.id" 
+                        class="font-semibold py-1 px-2 rounded-lg bg-black text-white duration-200"
+                        :class="form.brands.map(el => el.id).includes(brand.id) ? 'bg-purple-500 shadow-lg' : null"
+                        @click="toggleBrand(brand)"
+                    >
+                        {{ brand.name }}
+                    </button>
+                </div>
                 <label class=" bg-white px-2 text-sm font-semibold">Images</label>
                 <div class="flex justify-between">
                     <input 
@@ -158,13 +169,14 @@
 
     import ItemPreview from '@/Components/ControlPanelItem/ItemPreview.vue'
     import { useForm, router } from '@inertiajs/vue3';
-    import { watch, ref, computed, reactive } from 'vue'
+    import { watch, ref, reactive } from 'vue'
 
     const props = defineProps({
         item: Object,
         categories: Array,
         sizes: Array,
         colors: Array,
+        brands: Array,
     })
 
     const emit = defineEmits(['creating-new', 'item-updated-successfully'])
@@ -178,6 +190,7 @@
         categories: [],
         sizes: [],
         sizes_to_adjust: {},
+        brands: [],
         colors: [],
     })
 
@@ -191,6 +204,7 @@
         categories: [],
         sizes: [],
         sizes_to_adjust: {},
+        brands: [],
         colors: [],
     })
 
@@ -236,6 +250,15 @@
         }
     }
 
+    const toggleBrand = (brand) => {
+        let index = form.brands.findIndex(b => b.id === brand.id);
+        if(index != -1){
+            form.brands.splice(index, 1);
+        } else {
+            form.brands.push(brand);
+        }
+    }
+
     const createNew = () => {
         emit('creating-new');
         showInstruction.value = false;
@@ -249,6 +272,7 @@
         form.categories = [];
         form.sizes = [];
         form.sizes_to_adjust = {};
+        form.brands = [];
         form.colors = [];
     }
 
@@ -271,6 +295,7 @@
             form.sizes.forEach(size => {
                 form.sizes_to_adjust[size.id] = 0;
             });
+            form.brands = props.item.brands;
             form.colors = props.item.colors;
         }
     }
@@ -294,6 +319,7 @@
         adjustedForm.categories = f.categories.map(el => el.id);
         adjustedForm.sizes = f.sizes.length ? f.sizes[0].for : null;
         adjustedForm.sizes_to_adjust = Object.fromEntries(Object.entries(f.sizes_to_adjust).filter(([key, value]) => value !== 0)) ?? [];
+        adjustedForm.brands = f.brands.map(el => el.id);
         adjustedForm.colors = f.colors.map(el => el.id);
     }
 
