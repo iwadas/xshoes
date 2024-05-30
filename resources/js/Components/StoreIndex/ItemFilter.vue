@@ -6,10 +6,10 @@
                 <i class="fa-solid fa-filter text-2xl button-special-text"></i>
                 Filters
             </h2>
-            <p class="font-semibold text-xl button-primary">
+            <button @click="clearFilters" class="font-semibold text-xl button-primary">
                 <i class="fa-solid fa-trash text-sm mt-0.5"></i>
                 Clear
-            </p>
+            </button>
         </div>
         <div class="flex flex-col gap-y-2 mx-auto my-8 w-2/3">
             <item-categories v-if="subCategories" :sub-categories="subCategories"/>
@@ -35,6 +35,7 @@
     import ItemCategories from '@/Components/StoreIndex/ItemCategories.vue'
     import ItemFilterCategory from '@/Components/StoreIndex/ItemFilterCategory.vue'
     import { computed } from 'vue'
+    import { useStore } from 'vuex'
 
     const props = defineProps({
         subCategories: Array,
@@ -44,7 +45,11 @@
         filters: Object,
     })
 
-    
+    const store = useStore();
+    const clearFilters = () => {
+        store.commit('clearFilters');
+    }
+
     const filtered = computed(
         ()=>{
             let result = {brands: [], colors: [], sizes: []}

@@ -4,6 +4,7 @@
         <h1 class="mb-10 text-5xl font-bold flex items-center justify-center">
             <i class="button-special-text mr-2 fa-solid fa-store text-4xl"></i>
             Store
+            {{ storeFilters }}
             <br/>
         </h1>
         <div class="grid grid-cols-10 gap-3 mx-6">
@@ -68,6 +69,7 @@
         ()=>store.commit('setFilters', props.filters)
     )
 
+    // watch(storeFilters.value, () => sendFilterRequest())
     onMounted(
         ()=>{
             watch(storeFilters.value, () => sendFilterRequest())

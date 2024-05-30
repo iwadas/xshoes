@@ -28,6 +28,9 @@ const store = createStore({
                     state.filters[type].splice(index, 1);
                 }
             }
+        },
+        clearFilters(state){
+            Object.keys(state.filters).forEach(key => delete state.filters[key]);
         }
 
     }
