@@ -30,17 +30,17 @@
 
     let spline;
 
-    // onMounted(()=>{
-    //     const canvas = document.getElementById('splineCanva');
-    //     spline = new Application(canvas);
-    //     spline.load('https://prod.spline.design/cauj2IUcenYDhEEl/scene.splinecode')
-    //         .then(() => {
-    //             console.log('Spline scene loaded successfully!');
-    //         })
-    //         .catch((error) => {
-    //             console.error('Error loading Spline scene:', error);
-    //         });
-    //     }
-    // )
+    onMounted(()=>{
+        const canvas = document.getElementById('splineCanva');
+        spline = new Application(canvas);
+        spline.load('https://prod.spline.design/cauj2IUcenYDhEEl/scene.splinecode')
+            .then(() => {
+                console.log('Spline scene loaded successfully!');
+            })
+            .catch((error) => {
+                console.error('Error loading Spline scene:', error);
+            });
+        }
+    )
 
 </script>
