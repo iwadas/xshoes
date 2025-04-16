@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
     {
         $admin = User::factory()->create([
             'name' => 'admin',
-            'email' => 'admin@gmail.com',
+            'email' => 'admin@example.com',
             'password' => '123123'
         ]);
         $admin->roles()->attach(1);
@@ -23,14 +23,14 @@ class UserSeeder extends Seeder
 
         $moderator = User::factory()->create([
             'name' => 'moderator',
-            'email' => 'moderator@gmail.com',
+            'email' => 'moderator@example.com',
             'password' => '123123'
         ]);
         $moderator->roles()->attach(2);
 
         User::factory()->create([
             'name' => 'user',
-            'email' => 'user@gmail.com',
+            'email' => 'user@example.com',
             'password' => '123123'
         ]);
 

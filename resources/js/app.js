@@ -14,7 +14,6 @@ createInertiaApp({
     let page = pages[`./Pages/${name}.vue`]
     page.default.layout = page.default.layout || MainLayout
     return page
-
   },
   setup({ el, App, props, plugin }) {
     createApp({ render: () => h(App, props) })
